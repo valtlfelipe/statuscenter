@@ -9,12 +9,14 @@ class IncidentPage extends StatefulWidget {
   State<StatefulWidget> createState() => new _IncidentPageState();
 }
 
+// TODO: external this
 class Choice {
   const Choice({this.title});
 
   final String title;
 }
 
+// TODO: external this
 const List<Choice> choices = const <Choice>[
   const Choice(title: 'Open in browser'),
   const Choice(title: 'Share'),
@@ -31,7 +33,6 @@ class _IncidentPageState extends State<IncidentPage> {
     super.initState();
   }
 
-  // TODO: create a service to handle page id in shared preferences
   Future<Incident> _getPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String apiKey = prefs.getString('apiKey');
@@ -42,6 +43,7 @@ class _IncidentPageState extends State<IncidentPage> {
 
   void _select(Choice choice) async {
     String url = this.incident.shortlink;
+    // TODO: find another way to compare this
     if (choice == choices[0]) {
       if (await canLaunch(url)) {
         await launch(url);
@@ -63,7 +65,7 @@ class _IncidentPageState extends State<IncidentPage> {
         if (incidentSnap.hasError) {
           return Center(
             child: Text(
-                'Something wrong with message: ${incidentSnap.error.toString()}'),
+                'Something wrong with message: ${incidentSnap.error.toString()}'), // TODO: improve error handling
           );
         } else if (incidentSnap.connectionState != ConnectionState.done) {
           return Scaffold(

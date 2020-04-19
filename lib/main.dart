@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/pages/login.dart';
-import 'package:statuspageapp/pages/home.dart';
+// import 'package:statuspageapp/pages/login.dart';
+import 'package:statuspageapp/pages/incidents_list.dart';
 import 'package:statuspageapp/pages/incident.dart';
 
 void main() => runApp(MyApp());
@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
       // home: LoginPage(),
       initialRoute: '/home',
       routes: <String, WidgetBuilder>{
-        // '/': (BuildContext context) => LoginPage(),
-        '/home': (BuildContext context) => HomePage(),
+        // '/': (BuildContext context) => LoginPage(), // TODO: fix login flow
+        '/home': (BuildContext context) => IncidentsListPage(),
         '/incident': (BuildContext context) => IncidentPage(),
       },
     );

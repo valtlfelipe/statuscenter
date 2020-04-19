@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:statuspageapp/clients/pages_client.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
-import 'home/list_incidents.dart';
+import 'incidents_list/list_incidents.dart';
 
-class HomePage extends StatefulWidget {
+class IncidentsListPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _HomePageState();
+  State<StatefulWidget> createState() => new _IncidentsListPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _IncidentsListPageState extends State<IncidentsListPage> {
   Future<List<Incident>> _openIncidentsFuture;
   Future<List<Incident>> _incidentsFuture;
   Future<List<Incident>> _maintenancesFuture;
@@ -23,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /*
-    TODO: handle this better
+    TODO: handle this better, maybe in login flow
     if (prefs.getString('pageId') == null) {
       List<Page> pages = await new PagesClient(apiKey).getPages();
       prefs.setString('pageId', pages[0].id);

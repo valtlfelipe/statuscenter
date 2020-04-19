@@ -59,14 +59,17 @@ class IncidentHistory {
 
   factory IncidentHistory.fromJson(Map<String, dynamic> json) {
     return IncidentHistory(
-      id: json['id'],
-      body: json['body'],
-      status: json['status'],
-      displayAt: json['display_at'] != null ? DateTime.parse(json['display_at']) : null,
-      components: json['affected_components'] != null ? (json['affected_components'] as List)
-            .map((c) => new AffectedComponent.fromJson(c))
-            .toList() : null
-    );
+        id: json['id'],
+        body: json['body'],
+        status: json['status'],
+        displayAt: json['display_at'] != null
+            ? DateTime.parse(json['display_at'])
+            : null,
+        components: json['affected_components'] != null
+            ? (json['affected_components'] as List)
+                .map((c) => new AffectedComponent.fromJson(c))
+                .toList()
+            : null);
   }
 
   String getDisplayedAtFormated() {
@@ -108,7 +111,12 @@ class Incident {
   final String status;
   final String impact;
   final String shortlink;
+  final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime startedAt;
+  final DateTime resolvedAt;
+  final DateTime monitoringAt;
+  final DateTime scheduledFor;
   final List<IncidentHistory> history;
 
   Incident({
@@ -116,7 +124,12 @@ class Incident {
     this.name,
     this.status,
     this.impact,
+    this.createdAt,
     this.updatedAt,
+    this.startedAt,
+    this.resolvedAt,
+    this.monitoringAt,
+    this.scheduledFor,
     this.shortlink,
     this.history,
   });
@@ -128,14 +141,50 @@ class Incident {
         status: json['status'],
         impact: json['impact'],
         shortlink: json['shortlink'],
-        updatedAt: DateTime.parse(json['updated_at']),
-        history: json['incident_updates'] != null ? (json['incident_updates'] as List)
-            .map((h) => new IncidentHistory.fromJson(h))
-            .toList() : null);
+        createdAt: json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : null,
+        updatedAt: json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'])
+            : null,
+        startedAt: json['started_at'] != null
+            ? DateTime.parse(json['started_at'])
+            : null,
+        resolvedAt: json['resolved_at'] != null
+            ? DateTime.parse(json['resolved_at'])
+            : null,
+        monitoringAt: json['monitoring_at'] != null
+            ? DateTime.parse(json['monitoring_at'])
+            : null,
+        scheduledFor: json['scheduled_for'] != null
+            ? DateTime.parse(json['scheduled_for'])
+            : null,
+        history: json['incident_updates'] != null
+            ? (json['incident_updates'] as List)
+                .map((h) => new IncidentHistory.fromJson(h))
+                .toList()
+            : null);
   }
 
-  String getUpdatedAtFormated() {
-    return new DateFormat('d MMMM yyyy HH:mm').format(this.updatedAt.toLocal());
+  DateTime getLatestDate() {
+    if (this.resolvedAt != null) {
+      return this.resolvedAt;
+    } else if (this.monitoringAt != null) {
+      return this.monitoringAt;
+    } else if (this.scheduledFor != null) {
+      return this.scheduledFor;
+    } else if (this.updatedAt != null) {
+      return this.updatedAt;
+    } else if (this.startedAt != null) {
+      return this.startedAt;
+    }
+
+    return this.createdAt;
+  }
+
+  String getLatestDateFormatted() {
+    return new DateFormat('d MMMM yyyy HH:mm')
+        .format(this.getLatestDate().toLocal());
   }
 
   Color getColor() {

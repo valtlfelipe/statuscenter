@@ -54,15 +54,25 @@ class _HomePageState extends State<HomePage> {
     return incidents;
   }
 
+  // TODO: refac this, since this is stupid
   _onOpenIncidentsRefresh() {
+    setState(() {
+      _openIncidentsFuture = _getOpenIncidents();
+    });
     return _openIncidentsFuture = _getOpenIncidents();
   }
 
   _onIncidentsRefresh() {
+    setState(() {
+      _incidentsFuture = _getIncidents();
+    });
     return _incidentsFuture = _getIncidents();
   }
 
-  _onMaintenacesRefresh() {
+  _onMaintenacesRefresh() async {
+    setState(() {
+      _maintenancesFuture = _getMaintenances();
+    });
     return _maintenancesFuture = _getMaintenances();
   }
 
@@ -75,17 +85,21 @@ class _HomePageState extends State<HomePage> {
           title: Text('Statuspage Manager'), // TODO: Maybe add page title
           bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.warning), text: 'Open'),
-              Tab(icon: Icon(Icons.list), text: 'Incidents'),
-              Tab(icon: Icon(Icons.event), text: 'Maintenances'),
+              Tab(text: 'Open'),
+              Tab(text: 'Incidents'),
+              Tab(text: 'Maintenances'),
             ],
           ),
         ),
         body: TabBarView(
           children: <Widget>[
-            new IncidentsListWidget(_openIncidentsFuture, _onOpenIncidentsRefresh).build(),
-            new IncidentsListWidget(_incidentsFuture, _onIncidentsRefresh).build(),
-            new IncidentsListWidget(_maintenancesFuture, _onIncidentsRefresh).build(),
+            new IncidentsListWidget(
+                future: _openIncidentsFuture,
+                onRefresh: _onOpenIncidentsRefresh),
+            new IncidentsListWidget(
+                future: _incidentsFuture, onRefresh: _onIncidentsRefresh),
+            new IncidentsListWidget(
+                future: _maintenancesFuture, onRefresh: _onMaintenacesRefresh),
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
+import 'package:share/share.dart';
 
 class IncidentPage extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class Choice {
 
 const List<Choice> choices = const <Choice>[
   const Choice(title: 'Open in browser'),
+  const Choice(title: 'Share'),
 ];
 
 class _IncidentPageState extends State<IncidentPage> {
@@ -39,13 +41,15 @@ class _IncidentPageState extends State<IncidentPage> {
   }
 
   void _select(Choice choice) async {
+    String url = this.incident.shortlink;
     if (choice == choices[0]) {
-      String url = this.incident.shortlink;
       if (await canLaunch(url)) {
         await launch(url);
       } else {
         throw 'Could not launch $url';
       }
+    } else if (choice == choices[1]) {
+      await Share.share(url, subject: this.incident.name);
     }
   }
 

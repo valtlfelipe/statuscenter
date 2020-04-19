@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 
-class IncidentsListWidget {
-  Future _future;
-  Function onRefresh;
+class IncidentsListWidget extends StatelessWidget {
+  final Future future;
+  final Function onRefresh;
 
-  IncidentsListWidget(
-    this._future,
+  IncidentsListWidget({
+    Key key,
+    this.future,
     this.onRefresh,
-  );
+  }) : super(key: ObjectKey(future));
 
-  Widget build() {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: new EdgeInsets.all(20.0),
       child: new RefreshIndicator(
         child: FutureBuilder(
-          future: _future,
+          future: future,
           builder: (context, incidentSnap) {
             if (incidentSnap.hasError) {
               return Center(
@@ -28,6 +30,9 @@ class IncidentsListWidget {
               );
             }
             List<Incident> incidents = incidentSnap.data;
+            if (incidents == null || incidents.length == 0) {
+              return _emptyList(context);
+            }
             return _buildListView(incidents);
           },
         ),
@@ -35,6 +40,23 @@ class IncidentsListWidget {
           return onRefresh();
         },
       ),
+    );
+  }
+
+  Widget _emptyList(context) {
+    return ListView(
+      children: [
+        Center(
+          child: Column(
+            children: <Widget>[
+              Icon(Icons.sentiment_satisfied, size: 64),
+              SizedBox(height: 10),
+              Text('Nothing to see here.',
+                  style: Theme.of(context).textTheme.headline),
+            ],
+          ),
+        )
+      ],
     );
   }
 
@@ -67,7 +89,7 @@ class IncidentsListWidget {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(incident.getUpdatedAtFormated()),
+                  Text(incident.getLatestDateFormatted()),
                   SizedBox(height: 10),
                   Text(
                     incident.status,

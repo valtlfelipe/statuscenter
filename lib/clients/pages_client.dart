@@ -9,7 +9,6 @@ class PagesClient {
   Future<List<Page>> getPages() async {
     http.Response response = await http
         .get('https://api.statuspage.io/v1/pages?api_key=${this.apiKey}');
-    print('response >>> ${response.body}');
     List responseJson = json.decode(response.body);
     return responseJson.map((p) => new Page.fromJson(p)).toList();
   }

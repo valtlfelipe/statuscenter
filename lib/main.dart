@@ -14,10 +14,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      darkTheme: ThemeData.dark(),
       // home: LoginPage(),
-      initialRoute: '/',
+      initialRoute: '/home',
       routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => LoginPage(),
+        // '/': (BuildContext context) => LoginPage(),
         '/home': (BuildContext context) => HomePage(),
         '/incident': (BuildContext context) => IncidentPage(),
       },

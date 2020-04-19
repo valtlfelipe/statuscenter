@@ -111,26 +111,48 @@ class _IncidentPageState extends State<IncidentPage> {
 
   Widget _historyWidget() {
     List<IncidentHistory> history = this.incident.history;
+    if (history == null) {
+      return null;
+    }
     return ListView.builder(
-      itemCount: history.length,
-      itemBuilder: (context, index) {
-        IncidentHistory item = history[index];
-        return Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                title: Text(item.getStatusFormated()),
-                subtitle: Text(item.getDisplayedAtFormated()),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                child: Text(item.body),
-              )
-            ],
-          ),
-        );
-        }
-    );
+        itemCount: history.length,
+        itemBuilder: (context, index) {
+          IncidentHistory item = history[index];
+          return Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  title: Text(item.getStatusFormated()),
+                  subtitle: Text(item.getDisplayedAtFormated()),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                  child:
+                      Text(item.body, style: Theme.of(context).textTheme.body2),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                  child: _affectedComponents(item),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  Widget _affectedComponents(IncidentHistory history) {
+    List<AffectedComponent> components = history.components;
+    if (components == null) {
+      return null;
+    }
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: components.length,
+        itemBuilder: (context, index) {
+          AffectedComponent component = components[index];
+          return Text(component.name,
+              style: Theme.of(context).textTheme.caption);
+        });
   }
 }

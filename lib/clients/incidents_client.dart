@@ -14,7 +14,23 @@ class IncidentsClient {
     http.Response response = await http.get(
         'https://api.statuspage.io/v1/pages/${this.pageId}/incidents/unresolved?api_key=${this.apiKey}');
     // TODO: if (response.statusCode == 200) {
-    List responseJson = json.decode(response.body);
+    List responseJson = json.decode(utf8.decode(response.bodyBytes));
+    return responseJson.map((p) => new Incident.fromJson(p)).toList();
+  }
+
+  Future<List<Incident>> getIncidents() async {
+    http.Response response = await http.get(
+        'https://api.statuspage.io/v1/pages/${this.pageId}/incidents?api_key=${this.apiKey}');
+    // TODO: if (response.statusCode == 200) {
+    List responseJson = json.decode(utf8.decode(response.bodyBytes));
+    return responseJson.map((p) => new Incident.fromJson(p)).toList();
+  }
+
+  Future<List<Incident>> getMaintenaces() async {
+    http.Response response = await http.get(
+        'https://api.statuspage.io/v1/pages/${this.pageId}/incidents/scheduled?api_key=${this.apiKey}');
+    // TODO: if (response.statusCode == 200) {
+    List responseJson = json.decode(utf8.decode(response.bodyBytes));
     return responseJson.map((p) => new Incident.fromJson(p)).toList();
   }
 
@@ -22,7 +38,7 @@ class IncidentsClient {
     http.Response response = await http.get(
         'https://api.statuspage.io/v1/pages/${this.pageId}/incidents/$id?api_key=${this.apiKey}');
     // TODO: if (response.statusCode == 200) {
-    return new Incident.fromJson(json.decode(response.body));
+    return new Incident.fromJson(json.decode(utf8.decode(response.bodyBytes)));
   }
 }
 
@@ -31,12 +47,14 @@ class IncidentHistory {
   final String body;
   final String status;
   final DateTime displayAt;
+  final List<AffectedComponent> components;
 
   IncidentHistory({
     this.id,
     this.body,
     this.status,
     this.displayAt,
+    this.components,
   });
 
   factory IncidentHistory.fromJson(Map<String, dynamic> json) {
@@ -44,7 +62,10 @@ class IncidentHistory {
       id: json['id'],
       body: json['body'],
       status: json['status'],
-      displayAt: DateTime.parse(json['display_at']),
+      displayAt: json['display_at'] != null ? DateTime.parse(json['display_at']) : null,
+      components: json['affected_components'] != null ? (json['affected_components'] as List)
+            .map((c) => new AffectedComponent.fromJson(c))
+            .toList() : null
     );
   }
 
@@ -54,6 +75,29 @@ class IncidentHistory {
 
   String getStatusFormated() {
     return this.status.capitalize();
+  }
+}
+
+class AffectedComponent {
+  final String code;
+  final String name;
+  final String oldStatus;
+  final String newStatus;
+
+  AffectedComponent({
+    this.code,
+    this.name,
+    this.oldStatus,
+    this.newStatus,
+  });
+
+  factory AffectedComponent.fromJson(Map<String, dynamic> json) {
+    return AffectedComponent(
+      code: json['code'],
+      name: json['name'],
+      oldStatus: json['oldStatus'],
+      newStatus: json['newStatus'],
+    );
   }
 }
 
@@ -85,9 +129,9 @@ class Incident {
         impact: json['impact'],
         shortlink: json['shortlink'],
         updatedAt: DateTime.parse(json['updated_at']),
-        history: (json['incident_updates'] as List)
+        history: json['incident_updates'] != null ? (json['incident_updates'] as List)
             .map((h) => new IncidentHistory.fromJson(h))
-            .toList());
+            .toList() : null);
   }
 
   String getUpdatedAtFormated() {

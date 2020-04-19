@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/pages_client.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
+import 'home/list_incidents.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,107 +10,85 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<Incident>> _future;
+  Future<List<Incident>> _openIncidentsFuture;
+  Future<List<Incident>> _incidentsFuture;
+  Future<List<Incident>> _maintenancesFuture;
 
   @override
   void initState() {
-    _future = _getPages();
+    _openIncidentsFuture = _getOpenIncidents();
+    _incidentsFuture = _getIncidents();
+    _maintenancesFuture = _getMaintenances();
     super.initState();
   }
 
-  // TODO: create a service to handle page id in shared preferences
-  Future<List<Incident>> _getPages() async {
-    print('########## AQUUIIIII ???');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiKey = prefs.getString('apiKey');
+  /*
+    TODO: handle this better
     if (prefs.getString('pageId') == null) {
       List<Page> pages = await new PagesClient(apiKey).getPages();
       prefs.setString('pageId', pages[0].id);
     }
-    List<Incident> incidents =
-        await new IncidentsClient(apiKey, prefs.getString('pageId')).getOpenIncidents();
+  */
+
+  Future<List<Incident>> _getOpenIncidents() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Incident> incidents = await new IncidentsClient(
+            prefs.getString('apiKey'), prefs.getString('pageId'))
+        .getOpenIncidents();
     return incidents;
+  }
+
+  Future<List<Incident>> _getIncidents() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Incident> incidents = await new IncidentsClient(
+            prefs.getString('apiKey'), prefs.getString('pageId'))
+        .getIncidents();
+    return incidents;
+  }
+
+  Future<List<Incident>> _getMaintenances() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Incident> incidents = await new IncidentsClient(
+            prefs.getString('apiKey'), prefs.getString('pageId'))
+        .getMaintenaces();
+    return incidents;
+  }
+
+  _onOpenIncidentsRefresh() {
+    return _openIncidentsFuture = _getOpenIncidents();
+  }
+
+  _onIncidentsRefresh() {
+    return _incidentsFuture = _getIncidents();
+  }
+
+  _onMaintenacesRefresh() {
+    return _maintenancesFuture = _getMaintenances();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Open Incidents'),
-      ),
-      body: new Container(
-        padding: new EdgeInsets.all(20.0),
-        child: new RefreshIndicator(
-          child: _pageWidget(),
-          onRefresh: () {
-            return _future = _getPages();
-          },
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Statuspage Manager'), // TODO: Maybe add page title
+          bottom: TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.warning), text: 'Open'),
+              Tab(icon: Icon(Icons.list), text: 'Incidents'),
+              Tab(icon: Icon(Icons.event), text: 'Maintenances'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            new IncidentsListWidget(_openIncidentsFuture, _onOpenIncidentsRefresh).build(),
+            new IncidentsListWidget(_incidentsFuture, _onIncidentsRefresh).build(),
+            new IncidentsListWidget(_maintenancesFuture, _onIncidentsRefresh).build(),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _pageWidget() {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, incidentSnap) {
-        if (incidentSnap.hasError) {
-          return Center(
-            child: Text(
-                'Something wrong with message: ${incidentSnap.error.toString()}'),
-          );
-        } else if (incidentSnap.connectionState != ConnectionState.done) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        List<Incident> incidents = incidentSnap.data;
-        return _buildListView(incidents);
-      },
-    );
-  }
-
-  Widget _buildListView(List<Incident> incidents) {
-    return ListView.builder(
-      itemCount: incidents.length,
-      itemBuilder: (context, index) {
-        Incident incident = incidents[index];
-        return Card(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  width: 2.0,
-                  color: incident.getColor(),
-                ),
-              ),
-            ),
-            child: ListTile(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              onTap: () {
-                return Navigator.pushNamed(
-                  context,
-                  '/incident',
-                  arguments: (incident.id),
-                );
-              },
-              title: Text(incident.name),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(incident.getUpdatedAtFormated()),
-                  SizedBox(height: 10),
-                  Text(
-                    incident.status,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

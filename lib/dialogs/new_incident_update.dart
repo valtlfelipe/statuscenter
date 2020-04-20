@@ -3,17 +3,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/models/incident_status.dart';
 
-class NewIncidentPage extends StatefulWidget {
+class NewIncidentUpdateDialog extends StatefulWidget {
+  final Incident incident;
+
+  NewIncidentUpdateDialog({Key key, this.incident}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => new _NewIncidentPageState();
+  State<StatefulWidget> createState() =>
+      new _NewIncidentUpdateDialogState(this.incident);
 }
 
-class _NewIncidentPageState extends State<NewIncidentPage> {
+class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
   Incident incident;
   String selectedStatus;
   bool _isButtonDisabled;
   IncidentHistory _data = new IncidentHistory();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
+  _NewIncidentUpdateDialogState(this.incident);
 
   @override
   void initState() {
@@ -42,7 +49,7 @@ class _NewIncidentPageState extends State<NewIncidentPage> {
 
   @override
   Widget build(BuildContext context) {
-    this.incident = ModalRoute.of(context).settings.arguments;
+    // this.incident = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +69,9 @@ class _NewIncidentPageState extends State<NewIncidentPage> {
                   );
                 }).toList(),
                 isDense: true,
-                value: selectedStatus != null ? selectedStatus : this.incident.status,
+                value: selectedStatus != null
+                    ? selectedStatus
+                    : this.incident.status,
                 onChanged: (String value) {
                   setState(() => selectedStatus = value);
                 },

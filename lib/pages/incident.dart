@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:statuspageapp/dialogs/new_incident_update.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
@@ -57,7 +58,8 @@ class _IncidentPageState extends State<IncidentPage> {
   }
 
   bool _showNewUpdateButton() {
-    return this.incident.status != IncidentStatusResolved.key; // TODO: Check all other status
+    return this.incident.status !=
+        IncidentStatusResolved.key; // TODO: Check all other status
   }
 
   @override
@@ -102,11 +104,13 @@ class _IncidentPageState extends State<IncidentPage> {
           floatingActionButton: this._showNewUpdateButton()
               ? FloatingActionButton(
                   onPressed: () async {
-                    final result = await Navigator.pushNamed(
-                      context,
-                      '/incident/new',
-                      arguments: this.incident,
-                    );
+                    final result =
+                        await Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return new NewIncidentUpdateDialog(
+                                  incident: this.incident);
+                            },
+                            fullscreenDialog: true));
                     if (result == 'refresh') {
                       _future = _getPage();
                     }

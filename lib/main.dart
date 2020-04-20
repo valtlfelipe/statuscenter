@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 // import 'package:statuspageapp/pages/login.dart';
 import 'package:statuspageapp/pages/incidents_list.dart';
 import 'package:statuspageapp/pages/incident.dart';
-import 'package:statuspageapp/pages/new_incident.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,7 +21,6 @@ class MyApp extends StatelessWidget {
         // '/': (BuildContext context) => LoginPage(), // TODO: fix login flow
         '/home': (BuildContext context) => IncidentsListPage(),
         '/incident': (BuildContext context) => IncidentPage(),
-        '/incident/new': (BuildContext context) => NewIncidentPage(),
       },
     );
   }

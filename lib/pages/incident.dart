@@ -58,8 +58,9 @@ class _IncidentPageState extends State<IncidentPage> {
   }
 
   bool _showNewUpdateButton() {
-    return this.incident.status !=
-        IncidentStatusResolved.key; // TODO: Check all other status
+    return this.incident.status != IncidentStatusResolved.key &&
+        this.incident.status !=
+            IncidentStatusCompleted.key; // TODO: Check all other status
   }
 
   @override
@@ -173,16 +174,20 @@ class _IncidentPageState extends State<IncidentPage> {
 
   Widget _affectedComponents(IncidentHistory history) {
     List<AffectedComponent> components = history.components;
-    if (components == null) {
-      return null;
+    if (components == null ||
+        components.length == 0 ||
+        (components.length == 1 && components[0].newStatus == null)) {
+      return Text('No components were affected by this update.',
+          style: Theme.of(context).textTheme.caption);
     }
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: components.length,
-        itemBuilder: (context, index) {
-          AffectedComponent component = components[index];
-          return Text(component.name,
-              style: Theme.of(context).textTheme.caption);
-        });
+    return Column(
+      children: components.map((AffectedComponent component) {
+        return Row(children: [
+          component.getDisplayIcon(),
+          SizedBox(width: 5),
+          Text(component.name, style: Theme.of(context).textTheme.caption),
+        ]);
+      }).toList(),
+    );
   }
 }

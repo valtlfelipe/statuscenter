@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/models/incident_status.dart';
+import 'package:statuspageapp/models/component_status.dart';
 
 class NewIncidentUpdateDialog extends StatefulWidget {
   final Incident incident;
@@ -15,7 +16,6 @@ class NewIncidentUpdateDialog extends StatefulWidget {
 
 class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
   Incident incident;
-  String selectedStatus;
   bool _isButtonDisabled;
   IncidentHistory _data = new IncidentHistory();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -25,6 +25,12 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
   @override
   void initState() {
     _isButtonDisabled = false;
+    _data.components = this
+        .incident
+        .components
+        .map((Component c) =>
+            AffectedComponent(code: c.id, name: c.name, oldStatus: c.status))
+        .toList();
     super.initState();
   }
 
@@ -35,7 +41,6 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
         _isButtonDisabled = true;
       });
       _formKey.currentState.save(); // Save our form now.
-      this._data.status = selectedStatus;
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -49,65 +54,102 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // this.incident = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Incident update'),
+        title: Text('New update'),
       ),
       body: new Container(
         padding: new EdgeInsets.all(20),
-        child: Form(
-            key: this._formKey,
-            child: Column(children: <Widget>[
-              DropdownButtonFormField(
-                decoration: new InputDecoration(labelText: 'Status'),
-                items: IncidentStatusList.map((IncidentStatus value) {
-                  return new DropdownMenuItem(
-                    value: value.key,
-                    child: new Text(value.name),
-                  );
-                }).toList(),
-                isDense: true,
-                value: selectedStatus != null
-                    ? selectedStatus
-                    : this.incident.status,
-                onChanged: (String value) {
-                  setState(() => selectedStatus = value);
-                },
-              ),
-              SizedBox(
-                height: 150,
-                child: TextFormField(
-                  decoration: new InputDecoration(labelText: 'Message'),
-                  keyboardType: TextInputType.multiline,
-                  minLines: null,
-                  maxLines: null,
-                  expands: true,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onSaved: (String value) {
-                    this._data.body = value;
-                  },
-                ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    child: new Text(
-                      _isButtonDisabled ? 'Saving...' : 'Update',
-                      style: new TextStyle(color: Colors.white),
+        child: SingleChildScrollView(
+            child: Form(
+                key: this._formKey,
+                child: Column(children: [
+                  DropdownButtonFormField(
+                    decoration: new InputDecoration(labelText: 'Status'),
+                    items: IncidentStatusList.map((IncidentStatus value) {
+                      return new DropdownMenuItem(
+                        value: value.key,
+                        child: new Text(value.name),
+                      );
+                    }).toList(),
+                    isDense: true,
+                    value: _data.status != null
+                        ? _data.status
+                        : this.incident.status,
+                    onChanged: (String value) {
+                      setState(() => _data.status = value);
+                    },
+                  ),
+                  SizedBox(
+                    height: 150,
+                    child: TextFormField(
+                      decoration: new InputDecoration(labelText: 'Message'),
+                      keyboardType: TextInputType.multiline,
+                      minLines: null,
+                      maxLines: null,
+                      expands: true,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                      onSaved: (String value) {
+                        this._data.body = value;
+                      },
                     ),
-                    onPressed: this._isButtonDisabled ? null : this.submit,
-                    color: Colors.blue,
-                  )),
-            ])),
+                  ),
+                  _componentsWidget(),
+                  SizedBox(height: 20),
+                  SizedBox(
+                      width: double.infinity,
+                      child: RaisedButton(
+                        child: new Text(
+                          _isButtonDisabled ? 'Saving...' : 'Update',
+                          style: new TextStyle(color: Colors.white),
+                        ),
+                        onPressed: this._isButtonDisabled ? null : this.submit,
+                        color: Colors.blue,
+                      )),
+                ]))),
       ),
+    );
+  }
+
+  _componentsWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 20),
+        Text('Components affected',
+            style: Theme.of(context).textTheme.subtitle),
+        // SizedBox(height: 10),
+        _componentsListWidget(),
+      ],
+    );
+  }
+
+  _componentsListWidget() {
+    List<AffectedComponent> components = this._data.components;
+
+    return Column(
+      children: components.map((AffectedComponent c) {
+        final int idx = components.indexOf(c);
+        return DropdownButtonFormField(
+          decoration: new InputDecoration(labelText: c.name),
+          items: ComponentStatusList.map((ComponentStatus value) {
+            return new DropdownMenuItem(
+              value: value.key,
+              child: new Text(value.name),
+            );
+          }).toList(),
+          isDense: true,
+          value: c.newStatus != null ? c.newStatus : c.oldStatus,
+          onChanged: (String value) {
+            setState(() => _data.components[idx].newStatus = value);
+          },
+        );
+      }).toList(),
     );
   }
 }

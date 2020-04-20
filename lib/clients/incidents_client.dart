@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:statuspageapp/models/component_status.dart';
+import 'package:statuspageapp/models/incident_status.dart';
 import 'package:statuspageapp/utils/string_extension.dart';
 
 class IncidentsClient {
@@ -45,7 +47,9 @@ class IncidentsClient {
     Map data = {
       'incident': {
         'status': history.status,
-        'body': history.body
+        'body': history.body,
+        'components': Map.fromIterable(history.components,
+            key: (c) => c.code, value: (c) => c.newStatus)
       }
     };
     http.Response response = await http.patch(
@@ -99,6 +103,26 @@ class IncidentHistory {
   }
 }
 
+class Component {
+  String id;
+  String name;
+  String status;
+
+  Component({
+    this.id,
+    this.name,
+    this.status,
+  });
+
+  factory Component.fromJson(Map<String, dynamic> json) {
+    return Component(
+      id: json['id'],
+      name: json['name'],
+      status: json['status'],
+    );
+  }
+}
+
 class AffectedComponent {
   String code;
   String name;
@@ -116,9 +140,15 @@ class AffectedComponent {
     return AffectedComponent(
       code: json['code'],
       name: json['name'],
-      oldStatus: json['oldStatus'],
-      newStatus: json['newStatus'],
+      oldStatus: json['old_status'],
+      newStatus: json['new_status'],
     );
+  }
+
+  Icon getDisplayIcon() {
+    ComponentStatus status =
+        ComponentStatusList.firstWhere((c) => c.key == this.newStatus);
+    return status.icon;
   }
 }
 
@@ -136,6 +166,7 @@ class Incident {
   DateTime monitoringAt;
   DateTime scheduledFor;
   List<IncidentHistory> history;
+  List<Component> components;
 
   Incident({
     this.id,
@@ -150,6 +181,7 @@ class Incident {
     this.scheduledFor,
     this.shortlink,
     this.history,
+    this.components,
   });
 
   factory Incident.fromJson(Map<String, dynamic> json) {
@@ -180,6 +212,11 @@ class Incident {
         history: json['incident_updates'] != null
             ? (json['incident_updates'] as List)
                 .map((h) => new IncidentHistory.fromJson(h))
+                .toList()
+            : null,
+        components: json['components'] != null
+            ? (json['components'] as List)
+                .map((c) => new Component.fromJson(c))
                 .toList()
             : null);
   }
@@ -217,5 +254,11 @@ class Incident {
       default:
         return Colors.blue;
     }
+  }
+
+  String getStatusFormatted() {
+    IncidentStatus status =
+        AllIncidentStatusList.firstWhere((c) => c.key == this.status);
+    return status.name;
   }
 }

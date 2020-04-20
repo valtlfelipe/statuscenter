@@ -92,7 +92,7 @@ class IncidentsListWidget extends StatelessWidget {
                   Text(incident.getLatestDateFormatted()),
                   SizedBox(height: 10),
                   Text(
-                    incident.status,
+                    incident.getStatusFormatted(),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],

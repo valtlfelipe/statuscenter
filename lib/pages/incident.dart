@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:share/share.dart';
+import 'package:statuspageapp/clients/incidents_client.dart';
+import 'package:statuspageapp/models/incident_status.dart';
 
 class IncidentPage extends StatefulWidget {
   @override
@@ -55,6 +56,10 @@ class _IncidentPageState extends State<IncidentPage> {
     }
   }
 
+  bool _showNewUpdateButton() {
+    return this.incident.status != IncidentStatusResolved.key; // TODO: Check all other status
+  }
+
   @override
   Widget build(BuildContext context) {
     this.id = ModalRoute.of(context).settings.arguments;
@@ -94,6 +99,21 @@ class _IncidentPageState extends State<IncidentPage> {
             ],
           ),
           body: _incidentWidget(),
+          floatingActionButton: this._showNewUpdateButton()
+              ? FloatingActionButton(
+                  onPressed: () async {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      '/incident/new',
+                      arguments: this.incident,
+                    );
+                    if (result == 'refresh') {
+                      _future = _getPage();
+                    }
+                  },
+                  child: Icon(Icons.add),
+                )
+              : null,
         );
       },
     );

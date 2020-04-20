@@ -40,14 +40,32 @@ class IncidentsClient {
     // TODO: if (response.statusCode == 200) {
     return new Incident.fromJson(json.decode(utf8.decode(response.bodyBytes)));
   }
+
+  Future<Incident> createNewUpdate(String id, IncidentHistory history) async {
+    Map data = {
+      'incident': {
+        'status': history.status,
+        'body': history.body
+      }
+    };
+    http.Response response = await http.patch(
+      'https://api.statuspage.io/v1/pages/${this.pageId}/incidents/$id?api_key=${this.apiKey}',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+    // TODO: if (response.statusCode == 200) {
+    return new Incident.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+  }
 }
 
 class IncidentHistory {
-  final String id;
-  final String body;
-  final String status;
-  final DateTime displayAt;
-  final List<AffectedComponent> components;
+  String id;
+  String body;
+  String status;
+  DateTime displayAt;
+  List<AffectedComponent> components;
 
   IncidentHistory({
     this.id,
@@ -82,10 +100,10 @@ class IncidentHistory {
 }
 
 class AffectedComponent {
-  final String code;
-  final String name;
-  final String oldStatus;
-  final String newStatus;
+  String code;
+  String name;
+  String oldStatus;
+  String newStatus;
 
   AffectedComponent({
     this.code,
@@ -106,18 +124,18 @@ class AffectedComponent {
 
 // TODO: move to model/ folder
 class Incident {
-  final String id;
-  final String name;
-  final String status;
-  final String impact;
-  final String shortlink;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime startedAt;
-  final DateTime resolvedAt;
-  final DateTime monitoringAt;
-  final DateTime scheduledFor;
-  final List<IncidentHistory> history;
+  String id;
+  String name;
+  String status;
+  String impact;
+  String shortlink;
+  DateTime createdAt;
+  DateTime updatedAt;
+  DateTime startedAt;
+  DateTime resolvedAt;
+  DateTime monitoringAt;
+  DateTime scheduledFor;
+  List<IncidentHistory> history;
 
   Incident({
     this.id,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
+import 'package:statuspageapp/models/incident_impact.dart';
 import 'package:statuspageapp/models/incident_status.dart';
 import 'package:statuspageapp/models/component_status.dart';
 
@@ -17,6 +18,7 @@ class NewIncidentUpdateDialog extends StatefulWidget {
 class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
   Incident incident;
   bool _isButtonDisabled;
+  List<IncidentStatus> _incidentStatusList;
   IncidentHistory _data = new IncidentHistory();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
@@ -31,6 +33,9 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
         .map((Component c) =>
             AffectedComponent(code: c.id, name: c.name, oldStatus: c.status))
         .toList();
+    _incidentStatusList = this.incident.impact == IncidentImpactMaintenance.key
+        ? MaintenanceStatusList
+        : IncidentStatusList;
     super.initState();
   }
 
@@ -66,7 +71,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
                 child: Column(children: [
                   DropdownButtonFormField(
                     decoration: new InputDecoration(labelText: 'Status'),
-                    items: IncidentStatusList.map((IncidentStatus value) {
+                    items: _incidentStatusList.map((IncidentStatus value) {
                       return new DropdownMenuItem(
                         value: value.key,
                         child: new Text(value.name),

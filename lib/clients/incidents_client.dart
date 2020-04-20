@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:statuspageapp/models/component_status.dart';
+import 'package:statuspageapp/models/incident_impact.dart';
 import 'package:statuspageapp/models/incident_status.dart';
 import 'package:statuspageapp/utils/string_extension.dart';
 
@@ -243,17 +244,9 @@ class Incident {
   }
 
   Color getColor() {
-    switch (this.impact) {
-      case 'critical':
-        return Colors.red;
-      case 'major':
-        return Colors.deepOrange;
-      case 'minor':
-        return Colors.orange;
-
-      default:
-        return Colors.blue;
-    }
+    IncidentImpact impact =
+        IncidentImpactList.firstWhere((c) => c.key == this.impact);
+    return impact.color;
   }
 
   String getStatusFormatted() {

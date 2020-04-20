@@ -42,5 +42,12 @@ const List<IncidentStatus> IncidentStatusList = [
   IncidentStatusInvestigating,
   IncidentStatusIdentified,
   IncidentStatusMonitoring,
-  IncidentStatusResolved
+  IncidentStatusResolved,
+];
+
+const List<IncidentStatus> MaintenanceStatusList = [
+  IncidentStatusScheduled,
+  IncidentStatusInProgres,
+  IncidentStatusVerifying,
+  IncidentStatusCompleted,
 ];

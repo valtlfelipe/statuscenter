@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:statuspageapp/models/component.dart';
 import 'package:statuspageapp/models/component_status.dart';
 import 'package:statuspageapp/models/incident_impact.dart';
 import 'package:statuspageapp/models/incident_status.dart';
+import 'package:statuspageapp/utils/date_util.dart';
 import 'package:statuspageapp/utils/string_extension.dart';
 
 class IncidentsClient {
@@ -86,6 +86,29 @@ class IncidentsClient {
     // TODO: if (response.statusCode == 200) {
     return new Incident.fromJson(json.decode(utf8.decode(response.bodyBytes)));
   }
+
+  Future<Incident> createNewMaintenance(Incident incident) async {
+    Map data = {
+      'incident': {
+        'name': incident.name,
+        'body': incident.body,
+        'scheduled_for': incident.scheduledFor.toIso8601String(),
+        'scheduled_until': incident.scheduledUntil.toIso8601String(),
+        'component_ids': incident.components.map((c) => c.id).toList(),
+        'status': IncidentStatusScheduled.key,
+        'impact_override': IncidentImpactMaintenance.key,
+      }
+    };
+    http.Response response = await http.post(
+      'https://api.statuspage.io/v1/pages/${this.pageId}/incidents?api_key=${this.apiKey}',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+    // TODO: if (response.statusCode == 200) {
+    return new Incident.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+  }
 }
 
 class IncidentHistory {
@@ -119,7 +142,7 @@ class IncidentHistory {
   }
 
   String getDisplayedAtFormated() {
-    return new DateFormat('d MMMM yyyy HH:mm').format(this.displayAt.toLocal());
+    return DateUtil.format(this.displayAt);
   }
 
   String getStatusFormated() {
@@ -169,6 +192,7 @@ class Incident {
   DateTime resolvedAt;
   DateTime monitoringAt;
   DateTime scheduledFor;
+  DateTime scheduledUntil;
   List<IncidentHistory> history;
   List<Component> components;
   String body;
@@ -184,6 +208,7 @@ class Incident {
     this.resolvedAt,
     this.monitoringAt,
     this.scheduledFor,
+    this.scheduledUntil,
     this.shortlink,
     this.history,
     this.components,
@@ -214,6 +239,9 @@ class Incident {
           : null,
       scheduledFor: json['scheduled_for'] != null
           ? DateTime.parse(json['scheduled_for'])
+          : null,
+      scheduledUntil: json['scheduled_until'] != null
+          ? DateTime.parse(json['scheduled_until'])
           : null,
       history: json['incident_updates'] != null
           ? (json['incident_updates'] as List)
@@ -246,8 +274,7 @@ class Incident {
   }
 
   String getLatestDateFormatted() {
-    return new DateFormat('d MMMM yyyy HH:mm')
-        .format(this.getLatestDate().toLocal());
+    return DateUtil.format(this.getLatestDate());
   }
 
   Color getColor() {

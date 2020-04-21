@@ -6,20 +6,22 @@ import 'package:statuspageapp/models/component_status.dart';
 
 class ComponentsSelector extends StatefulWidget {
   final List<Component> components;
+  final bool allowStatusChange;
 
-  ComponentsSelector({Key key, this.components}) : super(key: key);
+  ComponentsSelector({Key key, this.components, this.allowStatusChange}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() =>
-      new _ComponentsSelectorState(this.components);
+      new _ComponentsSelectorState(this.components, this.allowStatusChange);
 }
 
 class _ComponentsSelectorState extends State<ComponentsSelector> {
   List<Component> components;
+  bool allowStatusChange;
   Future _componentsBuilder;
   List<AffectedComponentSelector> _data;
 
-  _ComponentsSelectorState(this.components);
+  _ComponentsSelectorState(this.components, this.allowStatusChange);
 
   @override
   void initState() {
@@ -122,7 +124,7 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
             ],
           ),
           Visibility(
-            visible: c.selected,
+            visible: this.allowStatusChange && c.selected,
             child: DropdownButtonFormField(
               items: ComponentStatusList.map((ComponentStatus value) {
                 return new DropdownMenuItem(

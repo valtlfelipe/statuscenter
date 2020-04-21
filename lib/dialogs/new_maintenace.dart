@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/components_selector.dart';
 import 'package:statuspageapp/models/component.dart';
+import 'package:statuspageapp/models/incident_impact.dart';
 import 'package:statuspageapp/models/incident_status.dart';
+import 'package:statuspageapp/utils/date_util.dart';
 
-class NewIncidentDialog extends StatefulWidget {
+class NewMaintenaceDialog extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _NewIncidentDialogState();
+  State<StatefulWidget> createState() => new _NewMaintenaceDialogState();
 }
 
-class _NewIncidentDialogState extends State<NewIncidentDialog> {
+class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
   bool _isButtonDisabled;
-  List<IncidentStatus> _incidentStatusList;
   Incident _data = new Incident();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  TextEditingController _startDateTimeFormCtrl = TextEditingController();
+  TextEditingController _endDateTimeFormCtrl = TextEditingController();
 
   @override
   void initState() {
     _isButtonDisabled = false;
-    _incidentStatusList = IncidentStatusList; // TODO: change this
     this._data.status = IncidentStatusInvestigating.key;
     this._data.components = new List<Component>();
+    this._data.scheduledFor = DateTime.now();
+    this._data.scheduledUntil =
+        this._data.scheduledFor.add(new Duration(days: 1));
+    _startDateTimeFormCtrl.text = DateUtil.format(this._data.scheduledFor);
+    _endDateTimeFormCtrl.text = DateUtil.format(this._data.scheduledUntil);
     super.initState();
   }
 
@@ -37,10 +45,34 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
 
       await new IncidentsClient(
               prefs.getString('apiKey'), prefs.getString('pageId'))
-          .createNew(this._data);
+          .createNewMaintenance(this._data);
 
       Navigator.pop(context, 'refresh');
     }
+  }
+
+  _selectStartDate() async {
+    DatePicker.showDateTimePicker(context,
+        // https://github.com/Realank/flutter_datetime_picker/issues/100
+        minTime: DateTime.now().subtract(new Duration(minutes: 10)),
+        currentTime: this._data.scheduledFor, onConfirm: (date) {
+      setState(() {
+        _data.scheduledFor = date;
+        _startDateTimeFormCtrl.text = DateUtil.format(date);
+      });
+    });
+  }
+
+  _selectEndDate() async {
+    DatePicker.showDateTimePicker(context,
+        // https://github.com/Realank/flutter_datetime_picker/issues/100
+        minTime: DateTime.now().subtract(new Duration(minutes: 10)),
+        currentTime: this._data.scheduledUntil, onConfirm: (date) {
+      setState(() {
+        _data.scheduledUntil = date;
+        _endDateTimeFormCtrl.text = DateUtil.format(date);
+      });
+    });
   }
 
   String _validateTextField(value) {
@@ -54,7 +86,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New incident'),
+        title: Text('New maintenance'),
       ),
       body: new Container(
         padding: new EdgeInsets.all(20),
@@ -69,19 +101,17 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                       onSaved: (String value) {
                         this._data.name = value;
                       }),
-                  DropdownButtonFormField(
-                    decoration: new InputDecoration(labelText: 'Status'),
-                    items: _incidentStatusList.map((IncidentStatus value) {
-                      return new DropdownMenuItem(
-                        value: value.key,
-                        child: new Text(value.name),
-                      );
-                    }).toList(),
-                    isDense: true,
-                    value: _data.status,
-                    onChanged: (String value) {
-                      setState(() => _data.status = value);
-                    },
+                  new TextFormField(
+                    readOnly: true,
+                    controller: _startDateTimeFormCtrl,
+                    decoration: new InputDecoration(labelText: 'Start Date'),
+                    onTap: _selectStartDate,
+                  ),
+                  new TextFormField(
+                    readOnly: true,
+                    controller: _endDateTimeFormCtrl,
+                    decoration: new InputDecoration(labelText: 'End Date'),
+                    onTap: _selectEndDate,
                   ),
                   SizedBox(
                     height: 150,
@@ -133,7 +163,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                         builder: (BuildContext context) {
                           return new ComponentsSelector(
                               components: this._data.components,
-                              allowStatusChange: true);
+                              allowStatusChange: false);
                         },
                         fullscreenDialog: true));
                 setState(() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/new_incident.dart';
+import 'package:statuspageapp/dialogs/new_maintenace.dart';
 import 'incidents_list/list_incidents.dart';
 
 class IncidentsListPage extends StatefulWidget {
@@ -9,17 +10,31 @@ class IncidentsListPage extends StatefulWidget {
   State<StatefulWidget> createState() => new _IncidentsListPageState();
 }
 
-class _IncidentsListPageState extends State<IncidentsListPage> {
+class _IncidentsListPageState extends State<IncidentsListPage>
+    with SingleTickerProviderStateMixin {
   Future<List<Incident>> _openIncidentsFuture;
   Future<List<Incident>> _incidentsFuture;
   Future<List<Incident>> _maintenancesFuture;
+  TabController _tabController;
+  final List<Tab> _tabs = <Tab>[
+    Tab(text: 'Open'),
+    Tab(text: 'Incidents'),
+    Tab(text: 'Maintenances'),
+  ];
 
   @override
   void initState() {
     _openIncidentsFuture = _getOpenIncidents();
     _incidentsFuture = _getIncidents();
     _maintenancesFuture = _getMaintenances();
+    _tabController = new TabController(vsync: this, length: _tabs.length);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   /*
@@ -81,42 +96,46 @@ class _IncidentsListPageState extends State<IncidentsListPage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Statuspage Manager'), // TODO: Maybe add page title
-          bottom: TabBar(
-            tabs: [
-              Tab(text: 'Open'),
-              Tab(text: 'Incidents'),
-              Tab(text: 'Maintenances'),
+          appBar: AppBar(
+            title: Text('Statuspage Manager'), // TODO: Maybe add page title
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: _tabs,
+            ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: <Widget>[
+              new IncidentsListWidget(
+                  future: _openIncidentsFuture,
+                  onRefresh: _onOpenIncidentsRefresh),
+              new IncidentsListWidget(
+                  future: _incidentsFuture, onRefresh: _onIncidentsRefresh),
+              new IncidentsListWidget(
+                  future: _maintenancesFuture,
+                  onRefresh: _onMaintenacesRefresh),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: <Widget>[
-            new IncidentsListWidget(
-                future: _openIncidentsFuture,
-                onRefresh: _onOpenIncidentsRefresh),
-            new IncidentsListWidget(
-                future: _incidentsFuture, onRefresh: _onIncidentsRefresh),
-            new IncidentsListWidget(
-                future: _maintenancesFuture, onRefresh: _onMaintenacesRefresh),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final result =
-                await Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return new NewIncidentDialog();
-                    },
-                    fullscreenDialog: true));
-            // if (result == 'refresh') {
-            //   _future = _getPage();
-            // }
-          },
-          child: Icon(Icons.add),
-        )
-      ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final result =
+                  await Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        // Maintenaces tab
+                        if (this._tabController.index == 2) {
+                          return new NewMaintenaceDialog();
+                        }
+                        return new NewIncidentDialog();
+                      },
+                      fullscreenDialog: true));
+              if (result == 'refresh' && this._tabController.index == 2) {
+                _onMaintenacesRefresh();
+              } else if (result == 'refresh') {
+                _onOpenIncidentsRefresh();
+              }
+            },
+            child: Icon(Icons.add),
+          )),
     );
   }
 }

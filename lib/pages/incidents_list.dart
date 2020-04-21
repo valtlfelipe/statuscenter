@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
+import 'package:statuspageapp/dialogs/new_incident.dart';
 import 'incidents_list/list_incidents.dart';
 
 class IncidentsListPage extends StatefulWidget {
@@ -101,6 +102,20 @@ class _IncidentsListPageState extends State<IncidentsListPage> {
                 future: _maintenancesFuture, onRefresh: _onMaintenacesRefresh),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final result =
+                await Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return new NewIncidentDialog();
+                    },
+                    fullscreenDialog: true));
+            // if (result == 'refresh') {
+            //   _future = _getPage();
+            // }
+          },
+          child: Icon(Icons.add),
+        )
       ),
     );
   }

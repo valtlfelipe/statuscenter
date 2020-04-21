@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:statuspageapp/models/component.dart';
 import 'package:statuspageapp/models/component_status.dart';
 import 'package:statuspageapp/models/incident_impact.dart';
 import 'package:statuspageapp/models/incident_status.dart';
@@ -63,6 +64,28 @@ class IncidentsClient {
     // TODO: if (response.statusCode == 200) {
     return new Incident.fromJson(json.decode(utf8.decode(response.bodyBytes)));
   }
+
+  Future<Incident> createNew(Incident incident) async {
+    Map data = {
+      'incident': {
+        'name': incident.name,
+        'status': incident.status,
+        'body': incident.body,
+        'components': Map.fromIterable(incident.components,
+            key: (c) => c.id, value: (c) => c.status),
+        'component_ids': incident.components.map((c) => c.id).toList()
+      }
+    };
+    http.Response response = await http.post(
+      'https://api.statuspage.io/v1/pages/${this.pageId}/incidents?api_key=${this.apiKey}',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+    // TODO: if (response.statusCode == 200) {
+    return new Incident.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+  }
 }
 
 class IncidentHistory {
@@ -101,26 +124,6 @@ class IncidentHistory {
 
   String getStatusFormated() {
     return this.status.capitalize();
-  }
-}
-
-class Component {
-  String id;
-  String name;
-  String status;
-
-  Component({
-    this.id,
-    this.name,
-    this.status,
-  });
-
-  factory Component.fromJson(Map<String, dynamic> json) {
-    return Component(
-      id: json['id'],
-      name: json['name'],
-      status: json['status'],
-    );
   }
 }
 
@@ -168,6 +171,7 @@ class Incident {
   DateTime scheduledFor;
   List<IncidentHistory> history;
   List<Component> components;
+  String body;
 
   Incident({
     this.id,
@@ -183,43 +187,46 @@ class Incident {
     this.shortlink,
     this.history,
     this.components,
+    this.body,
   });
 
   factory Incident.fromJson(Map<String, dynamic> json) {
     return Incident(
-        id: json['id'],
-        name: json['name'],
-        status: json['status'],
-        impact: json['impact'],
-        shortlink: json['shortlink'],
-        createdAt: json['created_at'] != null
-            ? DateTime.parse(json['created_at'])
-            : null,
-        updatedAt: json['updated_at'] != null
-            ? DateTime.parse(json['updated_at'])
-            : null,
-        startedAt: json['started_at'] != null
-            ? DateTime.parse(json['started_at'])
-            : null,
-        resolvedAt: json['resolved_at'] != null
-            ? DateTime.parse(json['resolved_at'])
-            : null,
-        monitoringAt: json['monitoring_at'] != null
-            ? DateTime.parse(json['monitoring_at'])
-            : null,
-        scheduledFor: json['scheduled_for'] != null
-            ? DateTime.parse(json['scheduled_for'])
-            : null,
-        history: json['incident_updates'] != null
-            ? (json['incident_updates'] as List)
-                .map((h) => new IncidentHistory.fromJson(h))
-                .toList()
-            : null,
-        components: json['components'] != null
-            ? (json['components'] as List)
-                .map((c) => new Component.fromJson(c))
-                .toList()
-            : null);
+      id: json['id'],
+      name: json['name'],
+      status: json['status'],
+      impact: json['impact'],
+      shortlink: json['shortlink'],
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
+      startedAt: json['started_at'] != null
+          ? DateTime.parse(json['started_at'])
+          : null,
+      resolvedAt: json['resolved_at'] != null
+          ? DateTime.parse(json['resolved_at'])
+          : null,
+      monitoringAt: json['monitoring_at'] != null
+          ? DateTime.parse(json['monitoring_at'])
+          : null,
+      scheduledFor: json['scheduled_for'] != null
+          ? DateTime.parse(json['scheduled_for'])
+          : null,
+      history: json['incident_updates'] != null
+          ? (json['incident_updates'] as List)
+              .map((h) => new IncidentHistory.fromJson(h))
+              .toList()
+          : null,
+      components: json['components'] != null
+          ? (json['components'] as List)
+              .map((c) => new Component.fromJson(c))
+              .toList()
+          : null,
+      body: json['body'],
+    );
   }
 
   DateTime getLatestDate() {

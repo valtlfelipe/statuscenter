@@ -185,7 +185,10 @@ class _IncidentPageState extends State<IncidentPage> {
         return Row(children: [
           component.getDisplayIcon(),
           SizedBox(width: 5),
-          Text(component.name, style: Theme.of(context).textTheme.caption),
+          Expanded(
+              child: Text(component.name,
+                  style: Theme.of(context).textTheme.caption,
+                  overflow: TextOverflow.ellipsis))
         ]);
       }).toList(),
     );

@@ -1,42 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:statuspageapp/clients/components_client.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
+import 'package:statuspageapp/dialogs/components_selector.dart';
 import 'package:statuspageapp/models/component.dart';
-import 'package:statuspageapp/models/incident_impact.dart';
 import 'package:statuspageapp/models/incident_status.dart';
-import 'package:statuspageapp/models/component_status.dart';
 
-class NewIncidentUpdateDialog extends StatefulWidget {
-  final Incident incident;
-
-  NewIncidentUpdateDialog({Key key, this.incident}) : super(key: key);
-
+class NewIncidentDialog extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() =>
-      new _NewIncidentUpdateDialogState(this.incident);
+  State<StatefulWidget> createState() => new _NewIncidentDialogState();
 }
 
-class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
-  Incident incident;
+class _NewIncidentDialogState extends State<NewIncidentDialog> {
   bool _isButtonDisabled;
   List<IncidentStatus> _incidentStatusList;
-  IncidentHistory _data = new IncidentHistory();
+  Incident _data = new Incident();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
-  _NewIncidentUpdateDialogState(this.incident);
 
   @override
   void initState() {
     _isButtonDisabled = false;
-    _data.components = this
-        .incident
-        .components
-        .map((Component c) =>
-            AffectedComponent(code: c.id, name: c.name, newStatus: c.status))
-        .toList();
-    _incidentStatusList = this.incident.impact == IncidentImpactMaintenance.key
-        ? MaintenanceStatusList
-        : IncidentStatusList;
+    _incidentStatusList = IncidentStatusList; // TODO: change this
+    this._data.status = IncidentStatusInvestigating.key;
+    this._data.components = new List<Component>();
     super.initState();
   }
 
@@ -52,17 +38,24 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
 
       await new IncidentsClient(
               prefs.getString('apiKey'), prefs.getString('pageId'))
-          .createNewUpdate(this.incident.id, this._data);
+          .createNew(this._data);
 
       Navigator.pop(context, 'refresh');
     }
+  }
+
+  String _validateTextField(value) {
+    if (value.isEmpty) {
+      return 'Please enter some text';
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New update'),
+        title: Text('New incident'),
       ),
       body: new Container(
         padding: new EdgeInsets.all(20),
@@ -70,6 +63,13 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
             child: Form(
                 key: this._formKey,
                 child: Column(children: [
+                  new TextFormField(
+                      autofocus: true,
+                      decoration: new InputDecoration(labelText: 'Name'),
+                      validator: this._validateTextField,
+                      onSaved: (String value) {
+                        this._data.name = value;
+                      }),
                   DropdownButtonFormField(
                     decoration: new InputDecoration(labelText: 'Status'),
                     items: _incidentStatusList.map((IncidentStatus value) {
@@ -79,9 +79,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
                       );
                     }).toList(),
                     isDense: true,
-                    value: _data.status != null
-                        ? _data.status
-                        : this.incident.status,
+                    value: _data.status,
                     onChanged: (String value) {
                       setState(() => _data.status = value);
                     },
@@ -94,12 +92,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
                       minLines: null,
                       maxLines: null,
                       expands: true,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
+                      validator: this._validateTextField,
                       onSaved: (String value) {
                         this._data.body = value;
                       },
@@ -111,7 +104,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
                       width: double.infinity,
                       child: RaisedButton(
                         child: new Text(
-                          _isButtonDisabled ? 'Saving...' : 'Update',
+                          _isButtonDisabled ? 'Saving...' : 'Create',
                           style: new TextStyle(color: Colors.white),
                         ),
                         onPressed: this._isButtonDisabled ? null : this.submit,
@@ -127,35 +120,30 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20),
-        Text('Components affected',
-            style: Theme.of(context).textTheme.subtitle),
-        // SizedBox(height: 10),
-        _componentsListWidget(),
+        SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+              color: Colors.blue,
+              child: new Text(
+                'Select affected components',
+                style: new TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                final List<Component> result =
+                    await Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return new ComponentsSelector(
+                              components: this._data.components);
+                        },
+                        fullscreenDialog: true));
+                setState(() {
+                  _data.components = result;
+                });
+              },
+            )),
+        Text('${this._data.components.length} components affected',
+            style: Theme.of(context).textTheme.caption),
       ],
-    );
-  }
-
-  _componentsListWidget() {
-    List<AffectedComponent> components = this._data.components;
-
-    return Column(
-      children: components.map((AffectedComponent c) {
-        final int idx = components.indexOf(c);
-        return DropdownButtonFormField(
-          decoration: new InputDecoration(labelText: c.name),
-          items: ComponentStatusList.map((ComponentStatus value) {
-            return new DropdownMenuItem(
-              value: value.key,
-              child: new Text(value.name),
-            );
-          }).toList(),
-          isDense: true,
-          value: c.newStatus,
-          onChanged: (String value) {
-            setState(() => _data.components[idx].newStatus = value);
-          },
-        );
-      }).toList(),
     );
   }
 }

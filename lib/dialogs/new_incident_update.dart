@@ -31,7 +31,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
         .incident
         .components
         .map((Component c) =>
-            AffectedComponent(code: c.id, name: c.name, oldStatus: c.status))
+            AffectedComponent(code: c.id, name: c.name, newStatus: c.status))
         .toList();
     _incidentStatusList = this.incident.impact == IncidentImpactMaintenance.key
         ? MaintenanceStatusList
@@ -149,7 +149,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
             );
           }).toList(),
           isDense: true,
-          value: c.newStatus != null ? c.newStatus : c.oldStatus,
+          value: c.newStatus,
           onChanged: (String value) {
             setState(() => _data.components[idx].newStatus = value);
           },

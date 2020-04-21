@@ -121,7 +121,6 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
             value: c.selected,
             onChanged: this._onSelectedChanged(c),
             controlAffinity: ListTileControlAffinity.leading,
-            // dense: true,
           ),
           Visibility(
             visible: this.allowStatusChange && c.selected,

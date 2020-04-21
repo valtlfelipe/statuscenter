@@ -8,7 +8,8 @@ class ComponentsSelector extends StatefulWidget {
   final List<Component> components;
   final bool allowStatusChange;
 
-  ComponentsSelector({Key key, this.components, this.allowStatusChange}) : super(key: key);
+  ComponentsSelector({Key key, this.components, this.allowStatusChange})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() =>
@@ -88,7 +89,7 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
         title: Text('Affected components'),
       ),
       body: new Container(
-        padding: new EdgeInsets.all(20),
+        padding: new EdgeInsets.all(10),
         child: FutureBuilder(
           future: _componentsBuilder,
           builder: (context, incidentSnap) {
@@ -115,26 +116,28 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
     return Column(
       children: this._data.map((AffectedComponentSelector c) {
         return Column(children: [
-          Row(
-            children: [
-              Checkbox(
-                  value: c.selected, onChanged: this._onSelectedChanged(c)),
-              SizedBox(width: 5),
-              Text(c.component.name)
-            ],
+          CheckboxListTile(
+            title: Text(c.component.name),
+            value: c.selected,
+            onChanged: this._onSelectedChanged(c),
+            controlAffinity: ListTileControlAffinity.leading,
+            // dense: true,
           ),
           Visibility(
             visible: this.allowStatusChange && c.selected,
-            child: DropdownButtonFormField(
-              items: ComponentStatusList.map((ComponentStatus value) {
-                return new DropdownMenuItem(
-                  value: value.key,
-                  child: new Text(value.name),
-                );
-              }).toList(),
-              isDense: true,
-              value: c.component.status,
-              onChanged: this._onStatusChanged(c),
+            child: Container(
+              padding: new EdgeInsets.only(left: 25, right: 25),
+              child: DropdownButtonFormField(
+                items: ComponentStatusList.map((ComponentStatus value) {
+                  return new DropdownMenuItem(
+                    value: value.key,
+                    child: new Text(value.name),
+                  );
+                }).toList(),
+                isDense: true,
+                value: c.component.status,
+                onChanged: this._onStatusChanged(c),
+              ),
             ),
           ),
         ]);

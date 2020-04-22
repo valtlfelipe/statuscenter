@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-// import 'package:statuspageapp/pages/login.dart';
+import 'package:statuspageapp/pages/login.dart';
 import 'package:statuspageapp/pages/incidents_list.dart';
 import 'package:statuspageapp/pages/incident.dart';
+import 'package:statuspageapp/services/auth_service.dart';
 
-void main() => runApp(MyApp());
+bool _isAuthenticated = false;
 
-class MyApp extends StatelessWidget {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  _isAuthenticated = await AuthService.isLogged();
+  runApp(StatusCenterApp());
+}
+
+class StatusCenterApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -16,9 +23,9 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(),
       // home: LoginPage(),
-      initialRoute: '/home',
+      initialRoute: _isAuthenticated ? '/home' : '/login',
       routes: <String, WidgetBuilder>{
-        // '/': (BuildContext context) => LoginPage(), // TODO: fix login flow
+        '/login': (BuildContext context) => LoginPage(),
         '/home': (BuildContext context) => IncidentsListPage(),
         '/incident': (BuildContext context) => IncidentPage(),
       },

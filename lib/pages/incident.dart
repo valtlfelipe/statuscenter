@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/dialogs/new_incident_update.dart';
+import 'package:statuspageapp/models/auth_data.dart';
+import 'package:statuspageapp/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
@@ -36,9 +37,8 @@ class _IncidentPageState extends State<IncidentPage> {
   }
 
   Future<Incident> _getPage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String apiKey = prefs.getString('apiKey');
-    this.incident = await new IncidentsClient(apiKey, prefs.getString('pageId'))
+    AuthData authData = await AuthService.getData();
+    this.incident = await new IncidentsClient(authData.apiKey, authData.page.id)
         .getIncident(this.id);
     return this.incident;
   }

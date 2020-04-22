@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/new_incident.dart';
 import 'package:statuspageapp/dialogs/new_maintenace.dart';
+import 'package:statuspageapp/models/auth_data.dart';
+import 'package:statuspageapp/services/auth_service.dart';
 import 'incidents_list/list_incidents.dart';
 
 class IncidentsListPage extends StatefulWidget {
@@ -15,12 +16,14 @@ class _IncidentsListPageState extends State<IncidentsListPage>
   Future<List<Incident>> _openIncidentsFuture;
   Future<List<Incident>> _incidentsFuture;
   Future<List<Incident>> _maintenancesFuture;
+
   TabController _tabController;
   final List<Tab> _tabs = <Tab>[
     Tab(text: 'Open'),
     Tab(text: 'Incidents'),
     Tab(text: 'Maintenances'),
   ];
+  AuthData _authData;
 
   @override
   void initState() {
@@ -37,35 +40,34 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     super.dispose();
   }
 
-  /*
-    TODO: handle this better, maybe in login flow
-    if (prefs.getString('pageId') == null) {
-      List<Page> pages = await new PagesClient(apiKey).getPages();
-      prefs.setString('pageId', pages[0].id);
+  Future<AuthData> _getAuthData() async {
+    if (this._authData == null) {
+      return this._authData = await AuthService.getData();
     }
-  */
+    return this._authData;
+  }
 
   Future<List<Incident>> _getOpenIncidents() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<Incident> incidents = await new IncidentsClient(
-            prefs.getString('apiKey'), prefs.getString('pageId'))
-        .getOpenIncidents();
+    AuthData authData = await _getAuthData();
+    List<Incident> incidents =
+        await new IncidentsClient(authData.apiKey, authData.page.id)
+            .getOpenIncidents();
     return incidents;
   }
 
   Future<List<Incident>> _getIncidents() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<Incident> incidents = await new IncidentsClient(
-            prefs.getString('apiKey'), prefs.getString('pageId'))
-        .getIncidents();
+    AuthData authData = await _getAuthData();
+    List<Incident> incidents =
+        await new IncidentsClient(authData.apiKey, authData.page.id)
+            .getIncidents();
     return incidents;
   }
 
   Future<List<Incident>> _getMaintenances() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<Incident> incidents = await new IncidentsClient(
-            prefs.getString('apiKey'), prefs.getString('pageId'))
-        .getMaintenaces();
+    AuthData authData = await _getAuthData();
+    List<Incident> incidents =
+        await new IncidentsClient(authData.apiKey, authData.page.id)
+            .getMaintenaces();
     return incidents;
   }
 
@@ -97,7 +99,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       length: 3,
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Statuspage Manager'), // TODO: Maybe add page title
+            title: Text('Status Center'), // TODO: Maybe add page title
             bottom: TabBar(
               controller: _tabController,
               tabs: _tabs,

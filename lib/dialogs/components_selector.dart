@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/components_client.dart';
+import 'package:statuspageapp/models/auth_data.dart';
 import 'package:statuspageapp/models/component.dart';
 import 'package:statuspageapp/models/component_status.dart';
+import 'package:statuspageapp/services/auth_service.dart';
 
 class ComponentsSelector extends StatefulWidget {
   final List<Component> components;
@@ -31,10 +32,9 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
   }
 
   Future getComponents() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<Component> data = await new ComponentsClient(
-            prefs.getString('apiKey'), prefs.getString('pageId'))
-        .getAll();
+    AuthData authData = await AuthService.getData();
+    List<Component> data =
+        await new ComponentsClient(authData.apiKey, authData.page.id).getAll();
     setState(() {
       _data = data.map((c) {
         Component alreadySelected = this

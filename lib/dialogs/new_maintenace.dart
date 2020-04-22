@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/components_selector.dart';
+import 'package:statuspageapp/models/auth_data.dart';
 import 'package:statuspageapp/models/component.dart';
-import 'package:statuspageapp/models/incident_impact.dart';
 import 'package:statuspageapp/models/incident_status.dart';
+import 'package:statuspageapp/services/auth_service.dart';
 import 'package:statuspageapp/utils/date_util.dart';
 
 class NewMaintenaceDialog extends StatefulWidget {
@@ -33,6 +33,13 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _startDateTimeFormCtrl.dispose();
+    _endDateTimeFormCtrl.dispose();
+    super.dispose();
+  }
+
   Future submit() async {
     // First validate form.
     if (this._formKey.currentState.validate()) {
@@ -41,10 +48,8 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
       });
       _formKey.currentState.save(); // Save our form now.
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      await new IncidentsClient(
-              prefs.getString('apiKey'), prefs.getString('pageId'))
+      AuthData authData = await AuthService.getData();
+      await new IncidentsClient(authData.apiKey, authData.page.id)
           .createNewMaintenance(this._data);
 
       Navigator.pop(context, 'refresh');

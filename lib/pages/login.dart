@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:statuspageapp/models/api_key_validation_result.dart';
+import 'package:statuspageapp/services/api_key_service.dart';
+import 'package:statuspageapp/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,8 +13,15 @@ class _LoginData {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isButtonDisabled;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   _LoginData _data = new _LoginData();
+
+  @override
+  void initState() {
+    _isButtonDisabled = false;
+    super.initState();
+  }
 
   String _validateApiKey(String value) {
     if (value.length < 8) {
@@ -25,15 +34,17 @@ class _LoginPageState extends State<LoginPage> {
   Future submit() async {
     // First validate form.
     if (this._formKey.currentState.validate()) {
+      setState(() {
+        _isButtonDisabled = true;
+      });
       _formKey.currentState.save(); // Save our form now.
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      // prefs.setString('apiKey', _data.apiKey);
-      prefs.setString('apiKey', 'aced4460-ba38-48ed-9b45-575dfe25af83');
-
-      Navigator.pushReplacementNamed(context, '/home');
-
-      print('apiKey: ${_data.apiKey}');
+      APIKeyValidationResult validation =
+          await APIKeyValidationService.validate(_data.apiKey);
+      if (validation.valid) {
+        await AuthService.login(validation.apiKey, validation.page);
+        Navigator.pushReplacementNamed(context, '/home');
+      } // TODO: handle not valid
     }
   }
 
@@ -66,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                       'Login',
                       style: new TextStyle(color: Colors.white),
                     ),
-                    onPressed: this.submit,
+                    onPressed: this._isButtonDisabled ? null : this.submit,
                     color: Colors.blue,
                   ),
                   margin: new EdgeInsets.only(top: 20.0),

@@ -82,7 +82,7 @@ class _IncidentPageState extends State<IncidentPage> {
             ),
           );
         }
-        // Incident incident = incidentSnap.data;
+
         return Scaffold(
           appBar: AppBar(
             title: Text(this.incident.name),

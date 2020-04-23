@@ -105,6 +105,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
               tabs: _tabs,
             ),
           ),
+          drawer: _getDrawer(),
           body: TabBarView(
             controller: _tabController,
             children: <Widget>[
@@ -138,6 +139,66 @@ class _IncidentsListPageState extends State<IncidentsListPage>
             },
             child: Icon(Icons.add),
           )),
+    );
+  }
+
+  _getDrawer() {
+    return Drawer(
+      child: Container(
+        padding: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Status Center',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    this._authData != null ? this._authData.page.name : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    this._authData != null ? 'ID: ${this._authData.page.id}' : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              )
+            ),
+            ListTile(
+              leading: Icon(Icons.announcement),
+              title: Text('Incidents'),
+              selected: true,
+              onTap: () => Navigator.pop(context),
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/settings');
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

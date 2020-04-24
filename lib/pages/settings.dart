@@ -83,7 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: Text('Share feedback'),
               onTap: () {
                 _launchURL(
-                    'mailto:statuscenterapp@felipe.im?subject=App feedback');
+                    'mailto:statuscenterapp@felipe.im?subject=App%20feedback');
               },
             ),
             Divider(),
@@ -135,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
               FlatButton(
-                child: Text('Remove'),
+                child: Text('Remove', style: TextStyle(color: Colors.red)),
                 onPressed: _isLoadingRemoval
                     ? null
                     : () async {

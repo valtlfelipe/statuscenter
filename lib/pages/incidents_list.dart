@@ -31,6 +31,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     _incidentsFuture = _getIncidents();
     _maintenancesFuture = _getMaintenances();
     _tabController = new TabController(vsync: this, length: _tabs.length);
+    _getAuthData();
     super.initState();
   }
 
@@ -42,7 +43,11 @@ class _IncidentsListPageState extends State<IncidentsListPage>
 
   Future<AuthData> _getAuthData() async {
     if (this._authData == null) {
-      return this._authData = await AuthService.getData();
+      AuthData authData = await AuthService.getData();
+      setState(() {
+        _authData = authData;
+      });
+      return authData;
     }
     return this._authData;
   }
@@ -108,7 +113,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
           drawer: _getDrawer(),
           body: TabBarView(
             controller: _tabController,
-            children: <Widget>[
+            children: [
               new IncidentsListWidget(
                   future: _openIncidentsFuture,
                   onRefresh: _onOpenIncidentsRefresh),
@@ -150,37 +155,38 @@ class _IncidentsListPageState extends State<IncidentsListPage>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Status Center',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Status Center',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    this._authData != null ? this._authData.page.name : '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+                    SizedBox(height: 20),
+                    Text(
+                      this._authData != null ? this._authData.page.name : '',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                  Text(
-                    this._authData != null ? 'ID: ${this._authData.page.id}' : '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
+                    Text(
+                      this._authData != null
+                          ? 'ID: ${this._authData.page.id}'
+                          : '',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ),
+                  ],
+                )),
             ListTile(
               leading: Icon(Icons.announcement),
               title: Text('Incidents'),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:statuscenter/models/api_key_validation_result.dart';
 import 'package:statuscenter/services/api_key_validation_service.dart';
 import 'package:statuscenter/services/auth_service.dart';
+import 'package:statuscenter/ui/color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
@@ -133,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed:
                               this._isButtonDisabled ? null : this.submit,
-                          color: Colors.green,
+                          color: ACCENT_COLOR,
                         )),
                     SizedBox(height: 10),
                     _helpWidget(),

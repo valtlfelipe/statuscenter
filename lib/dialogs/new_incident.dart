@@ -4,6 +4,7 @@ import 'package:statuscenter/dialogs/components_selector.dart';
 import 'package:statuscenter/models/component.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/models/incident_status.dart';
+import 'package:statuscenter/ui/color.dart';
 
 class NewIncidentDialog extends StatefulWidget {
   @override
@@ -104,7 +105,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                           style: new TextStyle(color: Colors.white),
                         ),
                         onPressed: this._isButtonDisabled ? null : this.submit,
-                        color: Colors.green,
+                        color: ACCENT_COLOR,
                       )),
                 ]))),
       ),

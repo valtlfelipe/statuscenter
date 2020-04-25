@@ -4,6 +4,7 @@ import 'package:statuscenter/pages/incidents_list.dart';
 import 'package:statuscenter/pages/incident.dart';
 import 'package:statuscenter/pages/settings.dart';
 import 'package:statuscenter/services/auth_service.dart';
+import 'package:statuscenter/ui/color.dart';
 
 bool _isAuthenticated = false;
 
@@ -20,9 +21,14 @@ class StatusCenterApp extends StatelessWidget {
     return MaterialApp(
         title: 'Status Center',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          brightness: Brightness.light,
+          primarySwatch: APP_COLOR,
+          accentColor: ACCENT_COLOR,
         ),
-        darkTheme: ThemeData.dark(),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          accentColor: ACCENT_COLOR,
+        ),
         initialRoute: _isAuthenticated ? '/home' : '/login',
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {

@@ -5,6 +5,7 @@ import 'package:statuscenter/dialogs/components_selector.dart';
 import 'package:statuscenter/models/component.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/models/incident_status.dart';
+import 'package:statuscenter/ui/color.dart';
 import 'package:statuscenter/utils/date_util.dart';
 
 class NewMaintenaceDialog extends StatefulWidget {
@@ -140,7 +141,7 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
                           style: new TextStyle(color: Colors.white),
                         ),
                         onPressed: this._isButtonDisabled ? null : this.submit,
-                        color: Colors.green,
+                        color: ACCENT_COLOR,
                       )),
                 ]))),
       ),

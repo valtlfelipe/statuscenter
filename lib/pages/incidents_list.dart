@@ -6,6 +6,7 @@ import 'package:statuscenter/exceptions/request_exception.dart';
 import 'package:statuscenter/models/auth_data.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/services/auth_service.dart';
+import 'package:statuscenter/ui/color.dart';
 import 'incidents_list/list_incidents.dart';
 
 class IncidentsListPage extends StatefulWidget {
@@ -155,7 +156,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
           children: [
             DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ACCENT_COLOR,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

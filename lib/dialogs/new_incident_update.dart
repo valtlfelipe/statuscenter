@@ -7,6 +7,7 @@ import 'package:statuscenter/models/incident_history.dart';
 import 'package:statuscenter/models/incident_impact.dart';
 import 'package:statuscenter/models/incident_status.dart';
 import 'package:statuscenter/models/component_status.dart';
+import 'package:statuscenter/ui/color.dart';
 
 class NewIncidentUpdateDialog extends StatefulWidget {
   final Incident incident;
@@ -114,7 +115,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
                           style: new TextStyle(color: Colors.white),
                         ),
                         onPressed: this._isButtonDisabled ? null : this.submit,
-                        color: Colors.green,
+                        color: ACCENT_COLOR,
                       )),
                 ]))),
       ),

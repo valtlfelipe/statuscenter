@@ -18,7 +18,7 @@ class StatusCenterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Statuspage',
+        title: 'Status Center',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

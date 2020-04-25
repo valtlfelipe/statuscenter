@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isButtonDisabled;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   _LoginData _data = new _LoginData();
+  String _errorMessage;
 
   @override
   void initState() {
@@ -27,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String _validateApiKey(String value) {
     if (value.length < 10) {
-      return 'Invalid API key.';
+      return 'Invalid API key';
     }
     return null;
   }
@@ -37,15 +38,22 @@ class _LoginPageState extends State<LoginPage> {
     if (this._formKey.currentState.validate()) {
       setState(() {
         _isButtonDisabled = true;
+        _errorMessage = null;
       });
-      _formKey.currentState.save(); // Save our form now.
+      _formKey.currentState.save();
 
       APIKeyValidationResult validation =
           await APIKeyValidationService.validate(_data.apiKey);
+
       if (validation.valid) {
         await AuthService.login(validation.apiKey, validation.page);
         Navigator.pushReplacementNamed(context, '/home');
-      } // TODO: handle not valid
+      } else {
+        setState(() {
+          _isButtonDisabled = false;
+          _errorMessage = validation.error;
+        });
+      }
     }
   }
 
@@ -58,12 +66,21 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
           padding: EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              SizedBox(
+                width: 100,
+                height: 100,
+                child: Image(
+                    image: AssetImage(
+                        'assets/logo.webp')), // TODO: reduze image size
+              ),
               Text('Welcome to Status Center!',
-                  style: Theme.of(context).textTheme.headline),
+                  style: Theme.of(context).textTheme.headline,
+                  textAlign: TextAlign.center),
               SizedBox(height: 5),
               RichText(
+                textAlign: TextAlign.center,
                 text: TextSpan(
                   style: Theme.of(context).textTheme.body2,
                   children: [
@@ -81,9 +98,6 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 5),
               Divider(),
               SizedBox(height: 5),
-              Text(
-                  'You will need your account API key to be able to continue.'),
-              SizedBox(height: 5),
               Form(
                 key: this._formKey,
                 child: Column(
@@ -91,7 +105,9 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                         autocorrect: false,
                         enableSuggestions: false,
-                        decoration: InputDecoration(labelText: 'Your API key'),
+                        decoration: InputDecoration(
+                            labelText: 'Your account API key',
+                            errorText: _errorMessage),
                         validator: this._validateApiKey,
                         onSaved: (String value) {
                           this._data.apiKey = value;

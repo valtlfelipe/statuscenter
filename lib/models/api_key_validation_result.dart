@@ -1,4 +1,4 @@
-import 'package:statuspageapp/clients/pages_client.dart';
+import 'package:statuspageapp/models/page.dart';
 
 class APIKeyValidationResult {
   bool valid;

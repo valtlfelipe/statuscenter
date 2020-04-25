@@ -1,20 +1,17 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:statuspageapp/clients/http_client.dart';
 import 'package:statuspageapp/models/component.dart';
 
-class ComponentsClient {
+class ComponentsClient extends HTTPClient {
   String apiKey;
   String pageId;
 
   ComponentsClient(this.apiKey, this.pageId);
 
   Future<List<Component>> getAll() async {
-    http.Response response = await http.get(
-        'https://api.statuspage.io/v1/pages/${this.pageId}/components?api_key=${this.apiKey}');
-    // TODO: if (response.statusCode == 200) {
-    List responseJson = json.decode(utf8.decode(response.bodyBytes));
+    String pageID = await this.getRequestPageId();
+    List responseJSON = await this.requestGet('/pages/$pageID/components');
     List<Component> components =
-        responseJson.map((p) => new Component.fromJson(p)).toList();
+        responseJSON.map((p) => new Component.fromJson(p)).toList();
     return components.where((c) => c.group == false).toList();
   }
 }

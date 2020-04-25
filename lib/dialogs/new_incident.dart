@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/components_selector.dart';
-import 'package:statuspageapp/models/auth_data.dart';
 import 'package:statuspageapp/models/component.dart';
+import 'package:statuspageapp/models/incident.dart';
 import 'package:statuspageapp/models/incident_status.dart';
-import 'package:statuspageapp/services/auth_service.dart';
 
 class NewIncidentDialog extends StatefulWidget {
   @override
@@ -34,8 +33,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
       });
       _formKey.currentState.save(); // Save our form now.
 
-      AuthData authData = await AuthService.getData();
-      await new IncidentsClient(authData.apiKey, authData.page.id)
+      await new IncidentsClient()
           .createNew(this._data);
 
       Navigator.pop(context, 'refresh');

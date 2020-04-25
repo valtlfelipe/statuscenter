@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:statuspageapp/dialogs/new_incident_update.dart';
-import 'package:statuspageapp/models/auth_data.dart';
-import 'package:statuspageapp/services/auth_service.dart';
+import 'package:statuspageapp/models/affected_component.dart';
+import 'package:statuspageapp/models/incident.dart';
+import 'package:statuspageapp/models/incident_history.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/models/incident_status.dart';
 
 class IncidentPage extends StatefulWidget {
+  final String id;
+
+  IncidentPage({this.id});
+
   @override
-  State<StatefulWidget> createState() => new _IncidentPageState();
+  State<StatefulWidget> createState() => new _IncidentPageState(this.id);
 }
 
 // TODO: external this
@@ -30,6 +35,8 @@ class _IncidentPageState extends State<IncidentPage> {
   Incident incident;
   String id;
 
+  _IncidentPageState(this.id);
+
   @override
   void initState() {
     _future = _getPage();
@@ -37,9 +44,7 @@ class _IncidentPageState extends State<IncidentPage> {
   }
 
   Future<Incident> _getPage() async {
-    AuthData authData = await AuthService.getData();
-    this.incident = await new IncidentsClient(authData.apiKey, authData.page.id)
-        .getIncident(this.id);
+    this.incident = await new IncidentsClient().getIncident(this.id);
     return this.incident;
   }
 
@@ -65,8 +70,6 @@ class _IncidentPageState extends State<IncidentPage> {
 
   @override
   Widget build(BuildContext context) {
-    this.id = ModalRoute.of(context).settings.arguments;
-
     return FutureBuilder(
       future: _future,
       builder: (context, incidentSnap) {

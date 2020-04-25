@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/clients/incidents_client.dart';
+import 'package:statuspageapp/models/incident.dart';
 
 class IncidentsListWidget extends StatelessWidget {
   final Future future;

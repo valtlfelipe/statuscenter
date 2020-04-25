@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/components_selector.dart';
-import 'package:statuspageapp/models/auth_data.dart';
 import 'package:statuspageapp/models/component.dart';
+import 'package:statuspageapp/models/incident.dart';
 import 'package:statuspageapp/models/incident_status.dart';
-import 'package:statuspageapp/services/auth_service.dart';
 import 'package:statuspageapp/utils/date_util.dart';
 
 class NewMaintenaceDialog extends StatefulWidget {
@@ -48,8 +47,7 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
       });
       _formKey.currentState.save(); // Save our form now.
 
-      AuthData authData = await AuthService.getData();
-      await new IncidentsClient(authData.apiKey, authData.page.id)
+      await new IncidentsClient()
           .createNewMaintenance(this._data);
 
       Navigator.pop(context, 'refresh');

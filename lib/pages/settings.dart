@@ -56,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     style: Theme.of(context).textTheme.headline,
                     textAlign: TextAlign.center),
                 Text(
-                  'Version $_version', // TODO: Check for app Version
+                  'Version $_version',
                   style: Theme.of(context).textTheme.body1,
                   textAlign: TextAlign.center,
                 ),

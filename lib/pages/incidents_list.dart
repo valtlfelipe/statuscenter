@@ -3,6 +3,7 @@ import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/new_incident.dart';
 import 'package:statuspageapp/dialogs/new_maintenace.dart';
 import 'package:statuspageapp/models/auth_data.dart';
+import 'package:statuspageapp/models/incident.dart';
 import 'package:statuspageapp/services/auth_service.dart';
 import 'incidents_list/list_incidents.dart';
 
@@ -53,25 +54,22 @@ class _IncidentsListPageState extends State<IncidentsListPage>
   }
 
   Future<List<Incident>> _getOpenIncidents() async {
-    AuthData authData = await _getAuthData();
     List<Incident> incidents =
-        await new IncidentsClient(authData.apiKey, authData.page.id)
+        await new IncidentsClient()
             .getOpenIncidents();
     return incidents;
   }
 
   Future<List<Incident>> _getIncidents() async {
-    AuthData authData = await _getAuthData();
     List<Incident> incidents =
-        await new IncidentsClient(authData.apiKey, authData.page.id)
+        await new IncidentsClient()
             .getIncidents();
     return incidents;
   }
 
   Future<List<Incident>> _getMaintenances() async {
-    AuthData authData = await _getAuthData();
     List<Incident> incidents =
-        await new IncidentsClient(authData.apiKey, authData.page.id)
+        await new IncidentsClient()
             .getMaintenaces();
     return incidents;
   }

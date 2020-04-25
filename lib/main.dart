@@ -18,19 +18,30 @@ class StatusCenterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Statuspage',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      darkTheme: ThemeData.dark(),
-      // home: LoginPage(),
-      initialRoute: _isAuthenticated ? '/home' : '/login',
-      routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => LoginPage(),
-        '/home': (BuildContext context) => IncidentsListPage(),
-        '/incident': (BuildContext context) => IncidentPage(),
-        '/settings': (BuildContext context) => SettingsPage(),
-      },
-    );
+        title: 'Statuspage',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        darkTheme: ThemeData.dark(),
+        initialRoute: _isAuthenticated ? '/home' : '/login',
+        onGenerateRoute: (RouteSettings settings) {
+          switch (settings.name) {
+            case '/login':
+              return MaterialPageRoute(builder: (context) => LoginPage());
+              break;
+            case '/home':
+              return MaterialPageRoute(
+                  builder: (context) => IncidentsListPage());
+              break;
+            case '/incident':
+              String id = settings.arguments;
+              return MaterialPageRoute(
+                  builder: (context) => IncidentPage(id: id));
+              break;
+            case '/settings':
+              return MaterialPageRoute(builder: (context) => SettingsPage());
+              break;
+          }
+        });
   }
 }

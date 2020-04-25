@@ -15,9 +15,12 @@ class IncidentsListPage extends StatefulWidget {
 
 class _IncidentsListPageState extends State<IncidentsListPage>
     with SingleTickerProviderStateMixin {
-  Future<List<Incident>> _openIncidentsFuture;
-  Future<List<Incident>> _incidentsFuture;
-  Future<List<Incident>> _maintenancesFuture;
+  IncidentsListWidgetController _openIncidentsController =
+      new IncidentsListWidgetController();
+  IncidentsListWidgetController _incidentsController =
+      new IncidentsListWidgetController();
+  IncidentsListWidgetController _maintenancesController =
+      new IncidentsListWidgetController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   TabController _tabController;
@@ -30,9 +33,6 @@ class _IncidentsListPageState extends State<IncidentsListPage>
 
   @override
   void initState() {
-    _openIncidentsFuture = _getOpenIncidents();
-    _incidentsFuture = _getIncidents();
-    _maintenancesFuture = _getMaintenances();
     _tabController = new TabController(vsync: this, length: _tabs.length);
     _getAuthData();
     super.initState();
@@ -60,7 +60,8 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       List<Incident> incidents = await new IncidentsClient().getOpenIncidents();
       return incidents;
     } on RequestException catch (error) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+      _scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text(error.toString())));
       return null;
     }
   }
@@ -70,7 +71,8 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       List<Incident> incidents = await new IncidentsClient().getIncidents();
       return incidents;
     } on RequestException catch (error) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+      _scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text(error.toString())));
       return null;
     }
   }
@@ -80,31 +82,10 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       List<Incident> incidents = await new IncidentsClient().getMaintenaces();
       return incidents;
     } on RequestException catch (error) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+      _scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text(error.toString())));
       return null;
     }
-  }
-
-  // TODO: refac this, since this is stupid
-  _onOpenIncidentsRefresh() {
-    setState(() {
-      _openIncidentsFuture = _getOpenIncidents();
-    });
-    return _openIncidentsFuture = _getOpenIncidents();
-  }
-
-  _onIncidentsRefresh() {
-    setState(() {
-      _incidentsFuture = _getIncidents();
-    });
-    return _incidentsFuture = _getIncidents();
-  }
-
-  _onMaintenacesRefresh() async {
-    setState(() {
-      _maintenancesFuture = _getMaintenances();
-    });
-    return _maintenancesFuture = _getMaintenances();
   }
 
   @override
@@ -112,7 +93,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        key: _scaffoldKey,
+          key: _scaffoldKey,
           appBar: AppBar(
             title: Text('Status Center'),
             bottom: TabBar(
@@ -125,15 +106,16 @@ class _IncidentsListPageState extends State<IncidentsListPage>
             controller: _tabController,
             children: [
               new IncidentsListWidget(
-                  future: _openIncidentsFuture,
-                  onRefresh: _onOpenIncidentsRefresh,
+                  controller: _openIncidentsController,
+                  onRefresh: _getOpenIncidents,
                   scaffoldKey: _scaffoldKey),
               new IncidentsListWidget(
-                  future: _incidentsFuture, onRefresh: _onIncidentsRefresh,
+                  controller: _incidentsController,
+                  onRefresh: _getIncidents,
                   scaffoldKey: _scaffoldKey),
               new IncidentsListWidget(
-                  future: _maintenancesFuture,
-                  onRefresh: _onMaintenacesRefresh,
+                  controller: _maintenancesController,
+                  onRefresh: _getMaintenances,
                   scaffoldKey: _scaffoldKey),
             ],
           ),
@@ -149,10 +131,14 @@ class _IncidentsListPageState extends State<IncidentsListPage>
                         return new NewIncidentDialog();
                       },
                       fullscreenDialog: true));
-              if (result == 'refresh' && this._tabController.index == 2) {
-                _onMaintenacesRefresh();
-              } else if (result == 'refresh') {
-                _onOpenIncidentsRefresh();
+              if (result == 'refresh') {
+                if (this._tabController.index == 0) {
+                  _openIncidentsController.refresh();
+                } else if (this._tabController.index == 1) {
+                  _incidentsController.refresh();
+                } else if (this._tabController.index == 2) {
+                  _maintenancesController.refresh();
+                }
               }
             },
             child: Icon(Icons.add),

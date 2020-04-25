@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   height: 100,
                   child: Image(
                       image: AssetImage(
-                          'assets/logo.webp')), // TODO: reduze image size
+                          'assets/logo.webp')),
                 ),
                 Text('Status Center',
                     style: Theme.of(context).textTheme.headline,

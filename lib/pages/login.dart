@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 100,
                 child: Image(
                     image: AssetImage(
-                        'assets/logo.webp')), // TODO: reduze image size
+                        'assets/logo.webp')),
               ),
               Text('Welcome to Status Center!',
                   style: Theme.of(context).textTheme.headline,

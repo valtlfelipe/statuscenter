@@ -1,32 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:statuspageapp/models/incident.dart';
 
-class IncidentsListWidget extends StatelessWidget {
-  final Future future;
+class IncidentsListWidget extends StatefulWidget {
   final Function onRefresh;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final IncidentsListWidgetController controller;
 
   IncidentsListWidget({
-    Key key,
-    this.future,
+    this.controller,
     this.onRefresh,
     this.scaffoldKey,
-  }) : super(key: ObjectKey(future));
+  });
+
+  @override
+  State<StatefulWidget> createState() => new _IncidentsListWidget(
+      this.controller, this.onRefresh, this.scaffoldKey);
+}
+
+class IncidentsListWidgetController {
+  void Function() refresh;
+}
+
+class _IncidentsListWidget extends State<IncidentsListWidget> {
+  Future _future;
+  bool _isRefreshing;
+  Function onRefresh;
+  GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<RefreshIndicatorState> _refreshKey =
+      new GlobalKey<RefreshIndicatorState>();
+
+  _IncidentsListWidget(IncidentsListWidgetController _controller,
+      Function onRefresh, GlobalKey scaffoldKey) {
+    _controller.refresh = () {
+      _refreshKey.currentState.show();
+    };
+    this.onRefresh = onRefresh;
+    this.scaffoldKey = scaffoldKey;
+  }
+
+  @override
+  void initState() {
+    _future = this.onRefresh();
+    _isRefreshing = false;
+    super.initState();
+  }
+
+  refresh() {
+    Future newFuture = this.onRefresh();
+    setState(() {
+      _isRefreshing = true;
+      _future = newFuture;
+    });
+    return newFuture;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: new EdgeInsets.all(20.0),
       child: new RefreshIndicator(
+        key: _refreshKey,
         child: FutureBuilder(
-          future: future,
+          future: _future,
           builder: (context, incidentSnap) {
             if (incidentSnap.hasError) {
               return Center(
                 child: Text(
                     'Something wrong with message: ${incidentSnap.error.toString()}'),
               );
-            } else if (incidentSnap.connectionState != ConnectionState.done) {
+            } else if (incidentSnap.connectionState != ConnectionState.done &&
+                !_isRefreshing) {
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -39,7 +82,7 @@ class IncidentsListWidget extends StatelessWidget {
           },
         ),
         onRefresh: () {
-          return onRefresh();
+          return refresh();
         },
       ),
     );
@@ -86,8 +129,9 @@ class IncidentsListWidget extends StatelessWidget {
                   '/incident',
                   arguments: incident.id,
                 );
-                if(error != null) {
-                  scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+                if (error != null) {
+                  scaffoldKey.currentState
+                      .showSnackBar(SnackBar(content: Text(error.toString())));
                 }
               },
               title: Text(incident.name),

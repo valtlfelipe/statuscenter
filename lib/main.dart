@@ -41,6 +41,9 @@ class StatusCenterApp extends StatelessWidget {
             case '/settings':
               return MaterialPageRoute(builder: (context) => SettingsPage());
               break;
+            default:
+              return null;
+              break;
           }
         });
   }

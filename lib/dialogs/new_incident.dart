@@ -19,7 +19,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
   @override
   void initState() {
     _isButtonDisabled = false;
-    _incidentStatusList = IncidentStatusList; // TODO: change this
+    _incidentStatusList = IncidentStatusList;
     this._data.status = IncidentStatusInvestigating.key;
     this._data.components = new List<Component>();
     super.initState();

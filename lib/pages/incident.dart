@@ -18,14 +18,12 @@ class IncidentPage extends StatefulWidget {
   State<StatefulWidget> createState() => new _IncidentPageState(this.id);
 }
 
-// TODO: external this
 class Choice {
   const Choice({this.title});
 
   final String title;
 }
 
-// TODO: external this
 const List<Choice> choices = const <Choice>[
   const Choice(title: 'Open in browser'),
   const Choice(title: 'Share'),
@@ -50,12 +48,12 @@ class _IncidentPageState extends State<IncidentPage> {
       return this.incident;
     } on RequestException catch (error) {
       Navigator.pop(context, error);
+      return null;
     }
   }
 
   void _select(Choice choice) async {
     String url = this.incident.shortlink;
-    // TODO: find another way to compare this
     if (choice == choices[0]) {
       if (await canLaunch(url)) {
         await launch(url);
@@ -70,7 +68,7 @@ class _IncidentPageState extends State<IncidentPage> {
   bool _showNewUpdateButton() {
     return this.incident.status != IncidentStatusResolved.key &&
         this.incident.status !=
-            IncidentStatusCompleted.key; // TODO: Check all other status
+            IncidentStatusCompleted.key;
   }
 
   @override
@@ -83,7 +81,8 @@ class _IncidentPageState extends State<IncidentPage> {
             child: Text(
                 'Something wrong with message: ${incidentSnap.error.toString()}'),
           );
-        } else if (incidentSnap.connectionState != ConnectionState.done || this.incident == null) {
+        } else if (incidentSnap.connectionState != ConnectionState.done ||
+            this.incident == null) {
           return Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

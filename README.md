@@ -54,3 +54,5 @@ The app is created entirely in Dart using Flutter. Here is how you can get start
 - Run `flutter run` to run the app inside the simulator.
 
 Flutter docs with more info: https://flutter.dev/docs.
+
+<div><i>Disclaimer: Not affiliated with Atlassian Statuspage.</i></div>

@@ -1,9 +1,9 @@
-<h1 style="text-align: center">
+<h1 align="center">
   <img alt="icon" width="128" height="128" src=".github/logo.svg">
   <br>
   Status Center
 </h1>
-<div style="text-align: center">
+<div align="center">
   An app where you can manage your <strong>statuspage.io page</strong> with ease and on the go.
 </div>
 <br />
@@ -26,7 +26,7 @@ Currently the app is priced (cheap) to help me to pay the apple developer licens
 More to come...
 
 ## Screenshots
-<div style="text-align: center">
+<div align="center">
   <img alt="Screenshot" src=".github/screenshots/main_light.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/main.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/incident.png" height="480">
@@ -38,7 +38,7 @@ More to come...
 ## Support me
 If you liked this app, please support my work (and help me paying the apple developer license) by buying the app or donating a cup of coffee.
 
-<a href="https://www.buymeacoffee.com/valtlfelipe" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" style="height: 51px !important;width: 217px !important;" ></a>
+<a href="https://www.buymeacoffee.com/valtlfelipe" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" width="200"></a>
 
 Thanks in advance ❤️
 

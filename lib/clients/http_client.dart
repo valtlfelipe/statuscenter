@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:statuspageapp/exceptions/request_exception.dart';
 import 'package:statuspageapp/models/auth_data.dart';
 import 'package:statuspageapp/services/auth_service.dart';
 
@@ -39,13 +40,30 @@ class HTTPClient {
     };
   }
 
+  _getResponseJSON(http.Response response) {
+    return json.decode(utf8.decode(response.bodyBytes));
+  }
+
+  _handleError(int statusCode, json) {
+    if (statusCode >= 400 && statusCode <= 499) {
+      if (json['error'] != null) {
+        throw new RequestException(json['error']);
+      } else if (json['message'] != null) {
+        throw new RequestException(json['message']);
+      }
+    } else if (statusCode >= 500) {
+      throw new RequestException('Internal server error');
+    }
+  }
+
   Future requestGet(String path) async {
     http.Response response = await http.get('$_baseURL/$path',
         headers: await this._getDefaultHeaders());
 
-    // TODO: if (response.statusCode == 200) {
+    var json = this._getResponseJSON(response);
+    this._handleError(response.statusCode, json);
 
-    return json.decode(utf8.decode(response.bodyBytes));
+    return json;
   }
 
   Future requestPatch(String path, Map data) async {
@@ -54,9 +72,10 @@ class HTTPClient {
     http.Response response = await http.patch('$_baseURL/$path',
         headers: headers, body: jsonEncode(data));
 
-    // TODO: if (response.statusCode == 200) {
+    var json = this._getResponseJSON(response);
+    this._handleError(response.statusCode, json);
 
-    return json.decode(utf8.decode(response.bodyBytes));
+    return json;
   }
 
   Future requestPost(String path, Map data) async {
@@ -65,8 +84,9 @@ class HTTPClient {
     http.Response response = await http.post('$_baseURL/$path',
         headers: headers, body: jsonEncode(data));
 
-    // TODO: if (response.statusCode == 200) {
+    var json = this._getResponseJSON(response);
+    this._handleError(response.statusCode, json);
 
-    return json.decode(utf8.decode(response.bodyBytes));
+    return json;
   }
 }

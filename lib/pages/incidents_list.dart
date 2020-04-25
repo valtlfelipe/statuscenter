@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:statuspageapp/clients/incidents_client.dart';
 import 'package:statuspageapp/dialogs/new_incident.dart';
 import 'package:statuspageapp/dialogs/new_maintenace.dart';
+import 'package:statuspageapp/exceptions/request_exception.dart';
 import 'package:statuspageapp/models/auth_data.dart';
 import 'package:statuspageapp/models/incident.dart';
 import 'package:statuspageapp/services/auth_service.dart';
@@ -17,6 +18,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
   Future<List<Incident>> _openIncidentsFuture;
   Future<List<Incident>> _incidentsFuture;
   Future<List<Incident>> _maintenancesFuture;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   TabController _tabController;
   final List<Tab> _tabs = <Tab>[
@@ -54,24 +56,33 @@ class _IncidentsListPageState extends State<IncidentsListPage>
   }
 
   Future<List<Incident>> _getOpenIncidents() async {
-    List<Incident> incidents =
-        await new IncidentsClient()
-            .getOpenIncidents();
-    return incidents;
+    try {
+      List<Incident> incidents = await new IncidentsClient().getOpenIncidents();
+      return incidents;
+    } on RequestException catch (error) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+      return null;
+    }
   }
 
   Future<List<Incident>> _getIncidents() async {
-    List<Incident> incidents =
-        await new IncidentsClient()
-            .getIncidents();
-    return incidents;
+    try {
+      List<Incident> incidents = await new IncidentsClient().getIncidents();
+      return incidents;
+    } on RequestException catch (error) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+      return null;
+    }
   }
 
   Future<List<Incident>> _getMaintenances() async {
-    List<Incident> incidents =
-        await new IncidentsClient()
-            .getMaintenaces();
-    return incidents;
+    try {
+      List<Incident> incidents = await new IncidentsClient().getMaintenaces();
+      return incidents;
+    } on RequestException catch (error) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+      return null;
+    }
   }
 
   // TODO: refac this, since this is stupid
@@ -101,8 +112,9 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        key: _scaffoldKey,
           appBar: AppBar(
-            title: Text('Status Center'), // TODO: Maybe add page title
+            title: Text('Status Center'),
             bottom: TabBar(
               controller: _tabController,
               tabs: _tabs,
@@ -114,12 +126,15 @@ class _IncidentsListPageState extends State<IncidentsListPage>
             children: [
               new IncidentsListWidget(
                   future: _openIncidentsFuture,
-                  onRefresh: _onOpenIncidentsRefresh),
+                  onRefresh: _onOpenIncidentsRefresh,
+                  scaffoldKey: _scaffoldKey),
               new IncidentsListWidget(
-                  future: _incidentsFuture, onRefresh: _onIncidentsRefresh),
+                  future: _incidentsFuture, onRefresh: _onIncidentsRefresh,
+                  scaffoldKey: _scaffoldKey),
               new IncidentsListWidget(
                   future: _maintenancesFuture,
-                  onRefresh: _onMaintenacesRefresh),
+                  onRefresh: _onMaintenacesRefresh,
+                  scaffoldKey: _scaffoldKey),
             ],
           ),
           floatingActionButton: FloatingActionButton(

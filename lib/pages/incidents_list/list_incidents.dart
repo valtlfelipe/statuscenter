@@ -4,11 +4,13 @@ import 'package:statuspageapp/models/incident.dart';
 class IncidentsListWidget extends StatelessWidget {
   final Future future;
   final Function onRefresh;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   IncidentsListWidget({
     Key key,
     this.future,
     this.onRefresh,
+    this.scaffoldKey,
   }) : super(key: ObjectKey(future));
 
   @override
@@ -22,7 +24,7 @@ class IncidentsListWidget extends StatelessWidget {
             if (incidentSnap.hasError) {
               return Center(
                 child: Text(
-                    'Something wrong with message: ${incidentSnap.error.toString()}'), // TODO: handle better errors
+                    'Something wrong with message: ${incidentSnap.error.toString()}'),
               );
             } else if (incidentSnap.connectionState != ConnectionState.done) {
               return Center(
@@ -78,12 +80,15 @@ class IncidentsListWidget extends StatelessWidget {
             child: ListTile(
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              onTap: () {
-                return Navigator.pushNamed(
+              onTap: () async {
+                dynamic error = await Navigator.pushNamed(
                   context,
                   '/incident',
-                  arguments: (incident.id),
+                  arguments: incident.id,
                 );
+                if(error != null) {
+                  scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error.toString())));
+                }
               },
               title: Text(incident.name),
               subtitle: Column(

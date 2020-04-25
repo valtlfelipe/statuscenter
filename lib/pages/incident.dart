@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:statuspageapp/dialogs/new_incident_update.dart';
+import 'package:statuspageapp/exceptions/request_exception.dart';
 import 'package:statuspageapp/models/affected_component.dart';
 import 'package:statuspageapp/models/incident.dart';
 import 'package:statuspageapp/models/incident_history.dart';
@@ -44,8 +45,12 @@ class _IncidentPageState extends State<IncidentPage> {
   }
 
   Future<Incident> _getPage() async {
-    this.incident = await new IncidentsClient().getIncident(this.id);
-    return this.incident;
+    try {
+      this.incident = await new IncidentsClient().getIncident(this.id);
+      return this.incident;
+    } on RequestException catch (error) {
+      Navigator.pop(context, error);
+    }
   }
 
   void _select(Choice choice) async {
@@ -76,9 +81,9 @@ class _IncidentPageState extends State<IncidentPage> {
         if (incidentSnap.hasError) {
           return Center(
             child: Text(
-                'Something wrong with message: ${incidentSnap.error.toString()}'), // TODO: improve error handling
+                'Something wrong with message: ${incidentSnap.error.toString()}'),
           );
-        } else if (incidentSnap.connectionState != ConnectionState.done) {
+        } else if (incidentSnap.connectionState != ConnectionState.done || this.incident == null) {
           return Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

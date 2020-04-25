@@ -96,7 +96,7 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
             if (incidentSnap.hasError) {
               return Center(
                 child: Text(
-                    'Something wrong with message: ${incidentSnap.error.toString()}'), // TODO: handle better errors
+                    'Something wrong with message: ${incidentSnap.error.toString()}'),
               );
             } else if (incidentSnap.connectionState != ConnectionState.done) {
               return Center(

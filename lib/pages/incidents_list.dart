@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/clients/incidents_client.dart';
-import 'package:statuspageapp/dialogs/new_incident.dart';
-import 'package:statuspageapp/dialogs/new_maintenace.dart';
-import 'package:statuspageapp/exceptions/request_exception.dart';
-import 'package:statuspageapp/models/auth_data.dart';
-import 'package:statuspageapp/models/incident.dart';
-import 'package:statuspageapp/services/auth_service.dart';
+import 'package:statuscenter/clients/incidents_client.dart';
+import 'package:statuscenter/dialogs/new_incident.dart';
+import 'package:statuscenter/dialogs/new_maintenace.dart';
+import 'package:statuscenter/exceptions/request_exception.dart';
+import 'package:statuscenter/models/auth_data.dart';
+import 'package:statuscenter/models/incident.dart';
+import 'package:statuscenter/services/auth_service.dart';
 import 'incidents_list/list_incidents.dart';
 
 class IncidentsListPage extends StatefulWidget {

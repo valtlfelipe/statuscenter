@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:statuspageapp/models/auth_data.dart';
-import 'package:statuspageapp/models/page.dart';
+import 'package:statuscenter/models/auth_data.dart';
+import 'package:statuscenter/models/page.dart';
 
 class AuthService {
   static const String APIKEY_KEY = 'apiKey';

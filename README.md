@@ -1,4 +1,4 @@
-# statuspageapp
+# statuscenter
 
 A new Flutter project.
 

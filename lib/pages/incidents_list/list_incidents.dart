@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/models/incident.dart';
+import 'package:statuscenter/models/incident.dart';
 
 class IncidentsListWidget extends StatefulWidget {
   final Function onRefresh;

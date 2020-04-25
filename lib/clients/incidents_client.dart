@@ -1,8 +1,8 @@
-import 'package:statuspageapp/clients/http_client.dart';
-import 'package:statuspageapp/models/incident.dart';
-import 'package:statuspageapp/models/incident_history.dart';
-import 'package:statuspageapp/models/incident_impact.dart';
-import 'package:statuspageapp/models/incident_status.dart';
+import 'package:statuscenter/clients/http_client.dart';
+import 'package:statuscenter/models/incident.dart';
+import 'package:statuscenter/models/incident_history.dart';
+import 'package:statuscenter/models/incident_impact.dart';
+import 'package:statuscenter/models/incident_status.dart';
 
 class IncidentsClient extends HTTPClient {
   Future<List<Incident>> getOpenIncidents() async {

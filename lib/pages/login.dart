@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/models/api_key_validation_result.dart';
-import 'package:statuspageapp/services/api_key_validation_service.dart';
-import 'package:statuspageapp/services/auth_service.dart';
+import 'package:statuscenter/models/api_key_validation_result.dart';
+import 'package:statuscenter/services/api_key_validation_service.dart';
+import 'package:statuscenter/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {

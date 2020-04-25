@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/clients/components_client.dart';
-import 'package:statuspageapp/models/auth_data.dart';
-import 'package:statuspageapp/models/component.dart';
-import 'package:statuspageapp/models/component_status.dart';
-import 'package:statuspageapp/services/auth_service.dart';
+import 'package:statuscenter/clients/components_client.dart';
+import 'package:statuscenter/models/auth_data.dart';
+import 'package:statuscenter/models/component.dart';
+import 'package:statuscenter/models/component_status.dart';
+import 'package:statuscenter/services/auth_service.dart';
 
 class ComponentsSelector extends StatefulWidget {
   final List<Component> components;

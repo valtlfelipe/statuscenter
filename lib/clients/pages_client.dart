@@ -1,5 +1,5 @@
-import 'package:statuspageapp/clients/http_client.dart';
-import 'package:statuspageapp/models/page.dart';
+import 'package:statuscenter/clients/http_client.dart';
+import 'package:statuscenter/models/page.dart';
 
 class PagesClient extends HTTPClient {
   String apiKey;

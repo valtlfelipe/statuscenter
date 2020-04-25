@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/models/component.dart';
-import 'package:statuspageapp/models/incident_history.dart';
-import 'package:statuspageapp/models/incident_impact.dart';
-import 'package:statuspageapp/models/incident_status.dart';
-import 'package:statuspageapp/utils/date_util.dart';
+import 'package:statuscenter/models/component.dart';
+import 'package:statuscenter/models/incident_history.dart';
+import 'package:statuscenter/models/incident_impact.dart';
+import 'package:statuscenter/models/incident_status.dart';
+import 'package:statuscenter/utils/date_util.dart';
 
 class Incident {
   String id;

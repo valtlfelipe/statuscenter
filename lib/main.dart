@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/pages/login.dart';
-import 'package:statuspageapp/pages/incidents_list.dart';
-import 'package:statuspageapp/pages/incident.dart';
-import 'package:statuspageapp/pages/settings.dart';
-import 'package:statuspageapp/services/auth_service.dart';
+import 'package:statuscenter/pages/login.dart';
+import 'package:statuscenter/pages/incidents_list.dart';
+import 'package:statuscenter/pages/incident.dart';
+import 'package:statuscenter/pages/settings.dart';
+import 'package:statuscenter/services/auth_service.dart';
 
 bool _isAuthenticated = false;
 

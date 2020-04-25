@@ -1,7 +1,7 @@
-import 'package:statuspageapp/clients/pages_client.dart';
-import 'package:statuspageapp/exceptions/request_exception.dart';
-import 'package:statuspageapp/models/api_key_validation_result.dart';
-import 'package:statuspageapp/models/page.dart';
+import 'package:statuscenter/clients/pages_client.dart';
+import 'package:statuscenter/exceptions/request_exception.dart';
+import 'package:statuscenter/models/api_key_validation_result.dart';
+import 'package:statuscenter/models/page.dart';
 
 class APIKeyValidationService {
   static Future<APIKeyValidationResult> validate(String apiKey) async {

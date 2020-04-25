@@ -1,4 +1,4 @@
-import 'package:statuspageapp/models/page.dart';
+import 'package:statuscenter/models/page.dart';
 
 class AuthData {
   String apiKey;

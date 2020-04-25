@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/models/component_status.dart';
+import 'package:statuscenter/models/component_status.dart';
 
 class AffectedComponent {
   String code;

@@ -1,6 +1,6 @@
-import 'package:statuspageapp/models/affected_component.dart';
-import 'package:statuspageapp/utils/date_util.dart';
-import 'package:statuspageapp/utils/string_extension.dart';
+import 'package:statuscenter/models/affected_component.dart';
+import 'package:statuscenter/utils/date_util.dart';
+import 'package:statuscenter/utils/string_extension.dart';
 
 class IncidentHistory {
   String id;

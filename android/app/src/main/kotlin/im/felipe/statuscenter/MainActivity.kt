@@ -1,4 +1,4 @@
-package com.example.statuspageapp
+package im.felipe.statuscenter
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

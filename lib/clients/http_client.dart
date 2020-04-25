@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:statuspageapp/exceptions/request_exception.dart';
-import 'package:statuspageapp/models/auth_data.dart';
-import 'package:statuspageapp/services/auth_service.dart';
+import 'package:statuscenter/exceptions/request_exception.dart';
+import 'package:statuscenter/models/auth_data.dart';
+import 'package:statuscenter/services/auth_service.dart';
 
 class HTTPClient {
   final String _baseURL = 'https://api.statuspage.io/v1/';

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:statuspageapp/clients/incidents_client.dart';
-import 'package:statuspageapp/models/affected_component.dart';
-import 'package:statuspageapp/models/component.dart';
-import 'package:statuspageapp/models/incident.dart';
-import 'package:statuspageapp/models/incident_history.dart';
-import 'package:statuspageapp/models/incident_impact.dart';
-import 'package:statuspageapp/models/incident_status.dart';
-import 'package:statuspageapp/models/component_status.dart';
+import 'package:statuscenter/clients/incidents_client.dart';
+import 'package:statuscenter/models/affected_component.dart';
+import 'package:statuscenter/models/component.dart';
+import 'package:statuscenter/models/incident.dart';
+import 'package:statuscenter/models/incident_history.dart';
+import 'package:statuscenter/models/incident_impact.dart';
+import 'package:statuscenter/models/incident_status.dart';
+import 'package:statuscenter/models/component_status.dart';
 
 class NewIncidentUpdateDialog extends StatefulWidget {
   final Incident incident;

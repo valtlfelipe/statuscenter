@@ -92,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
               trailing: Icon(Icons.chevron_right),
               onTap: () async {
                 _launchURL(
-                    'https://github.com/valtlfelipe/statuscenter/legal/terms-of-service.md');
+                    'https://github.com/valtlfelipe/statuscenter/.legal/terms.md');
               },
             ),
             ListTile(
@@ -100,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
               trailing: Icon(Icons.chevron_right),
               onTap: () {
                 _launchURL(
-                    'https://github.com/valtlfelipe/statuscenter/legal/privacy-policy.md');
+                    'https://github.com/valtlfelipe/statuscenter/.legal/privacy-policy.md');
               },
             ),
             ListTile(

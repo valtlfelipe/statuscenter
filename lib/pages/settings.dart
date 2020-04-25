@@ -79,6 +79,14 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             Divider(),
             ListTile(
+              leading: Icon(Icons.code),
+              title: Text('Source code'),
+              onTap: () {
+                _launchURL(
+                    'https://github.com/valtlfelipe/statuscenter');
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.mode_comment),
               title: Text('Share feedback'),
               onTap: () {
@@ -92,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
               trailing: Icon(Icons.chevron_right),
               onTap: () async {
                 _launchURL(
-                    'https://github.com/valtlfelipe/statuscenter/.legal/terms.md');
+                    'https://github.com/valtlfelipe/statuscenter/blob/master/.legal/terms.md');
               },
             ),
             ListTile(
@@ -100,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
               trailing: Icon(Icons.chevron_right),
               onTap: () {
                 _launchURL(
-                    'https://github.com/valtlfelipe/statuscenter/.legal/privacy-policy.md');
+                    'https://github.com/valtlfelipe/statuscenter/blob/master/.legal/privacy-policy.md');
               },
             ),
             ListTile(

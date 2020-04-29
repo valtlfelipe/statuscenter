@@ -15,6 +15,8 @@ Currently as a single person that manages the status page on my company, I had, 
 
 Currently the app is priced (cheap) to help me to pay the apple developer license so I can publish for iOS too.
 
+More about my first app on my blog: https://felipe.im/posts/creating-my-first-mobile-app/.
+
 ## Features
 - List all incidents (open, resolved and maintenances)
 - Create new updates on open incidents

@@ -8,7 +8,7 @@
 </div>
 <br />
 
-<a href='https://play.google.com/store/##INSERT_STORE_URL##?utm_source=github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200' /></a>
+<a href='https://play.google.com/store/apps/details?id=im.felipe.statuscenter&utm_source=github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200' /></a>
 
 ## Motivation
 Currently as a single person that manages the status page on my company, I had, sometimes, the necessity to update the page on the go, without getting on my computer, or to follow long steps to just post an update (open the mobile browser, search for the site, log in, etc). So I thinked, why not create an app to help me with that (and maybe others that have the same "issue") and take this opportunity to learn something new.
@@ -56,3 +56,4 @@ The app is created entirely in Dart using Flutter. Here is how you can get start
 Flutter docs with more info: https://flutter.dev/docs.
 
 <div><i>Disclaimer: Not affiliated with Atlassian Statuspage.</i></div>
+<div><i>Google Play and the Google Play logo are trademarks of Google LLC.</i></div>

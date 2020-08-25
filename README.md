@@ -10,12 +10,7 @@
 
 <a href='https://play.google.com/store/apps/details?id=im.felipe.statuscenter&utm_source=github&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200' /></a>
 
-## Motivation
-Currently as a single person that manages the status page (statuspage.io) on my company, I had, sometimes, the necessity to update the page on the go, without getting on my computer, or to follow long steps to just post an update (open the mobile browser, search for the site, log in, etc). So I thinked, why not create an app to help me with that (and maybe others that have the same "issue") and take this opportunity to learn something new.
-
-Currently the app is priced (cheap) to help me to pay the apple developer license so I can publish for iOS too.
-
-More about my first app on my blog: https://felipe.im/posts/creating-my-first-mobile-app/.
+_To support the project, the app has a small price_
 
 ## Features
 - List all incidents (open, resolved and maintenances)
@@ -23,9 +18,11 @@ More about my first app on my blog: https://felipe.im/posts/creating-my-first-mo
 - Create new incident
 - Schedule new maintenance
 - Automatic dark mode
-- No tracking / ads ...
+- No tracking or ads
 
 More to come...
+
+See the [project](https://github.com/valtlfelipe/statuscenter/projects/1) to know what's on the roadmap. Also, feel free to suggest any idea by oppening an issue.
 
 ## Screenshots
 <div align="center">
@@ -36,6 +33,13 @@ More to come...
   <img alt="Screenshot" src=".github/screenshots/new_incident.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/new_maintenance.png" height="480">
 </div>
+
+## Motivation
+Currently as a single person that manages the status page (statuspage.io) on my company, I had, sometimes, the necessity to update the page on the go, without getting on my computer, or to follow long steps to just post an update (open the mobile browser, search for the site, log in, etc). So I thinked, why not create an app to help me with that (and maybe others that have the same "issue") and take this opportunity to learn something new.
+
+Currently the app has a small price to help me pay the apple developer license so I can publish for iOS too and support the project.
+
+More about my first app on my blog: https://felipe.im/posts/creating-my-first-mobile-app/.
 
 ## Support me
 If you liked this app, please support my work (and help me paying the apple developer license) by buying the app or donating a cup of coffee.

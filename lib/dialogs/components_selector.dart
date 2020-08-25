@@ -80,33 +80,39 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: new IconButton(
-          icon: new Icon(Icons.close),
-          onPressed: this._onClose,
+    return WillPopScope(
+      onWillPop: () async {
+        this._onClose();
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: new IconButton(
+            icon: new Icon(Icons.close),
+            onPressed: this._onClose,
+          ),
+          title: Text('Affected components'),
         ),
-        title: Text('Affected components'),
-      ),
-      body: new Container(
-        padding: new EdgeInsets.all(10),
-        child: FutureBuilder(
-          future: _componentsBuilder,
-          builder: (context, incidentSnap) {
-            if (incidentSnap.hasError) {
-              return Center(
-                child: Text(
-                    'Something wrong with message: ${incidentSnap.error.toString()}'),
+        body: new Container(
+          padding: new EdgeInsets.all(10),
+          child: FutureBuilder(
+            future: _componentsBuilder,
+            builder: (context, incidentSnap) {
+              if (incidentSnap.hasError) {
+                return Center(
+                  child: Text(
+                      'Something wrong with message: ${incidentSnap.error.toString()}'),
+                );
+              } else if (incidentSnap.connectionState != ConnectionState.done) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return SingleChildScrollView(
+                child: _componentsListWidget(),
               );
-            } else if (incidentSnap.connectionState != ConnectionState.done) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return SingleChildScrollView(
-              child: _componentsListWidget(),
-            );
-          },
+            },
+          ),
         ),
       ),
     );

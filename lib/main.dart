@@ -37,6 +37,7 @@ class StatusCenterApp extends StatelessWidget {
               break;
             case '/home':
               return MaterialPageRoute(
+                  settings: RouteSettings(name: "/home"),
                   builder: (context) => IncidentsListPage());
               break;
             case '/incident':

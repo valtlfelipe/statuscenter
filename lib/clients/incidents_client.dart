@@ -16,7 +16,7 @@ class IncidentsClient extends HTTPClient {
   Future<List<Incident>> getIncidents() async {
     String pageID = await this.getRequestPageId();
     List responseJSON =
-        await this.requestGet('/pages/$pageID/incidents?limit=5');
+        await this.requestGet('/pages/$pageID/incidents');
     return responseJSON.map((p) => new Incident.fromJson(p)).toList();
   }
   Future<Incident> deleteIncident(String id) async {

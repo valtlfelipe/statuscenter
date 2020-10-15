@@ -119,7 +119,7 @@ class _IncidentPageState extends State<IncidentPage> {
               IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    showAlertDialog(context);
+                    showRemoveDialog(context);
                   })
             ],
           ),
@@ -216,7 +216,7 @@ class _IncidentPageState extends State<IncidentPage> {
     );
   }
 
-  Widget showAlertDialog(BuildContext context) {
+  Widget showRemoveDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
@@ -225,19 +225,20 @@ class _IncidentPageState extends State<IncidentPage> {
       },
     );
     Widget deleteButton = FlatButton(
-      child: Text("Delete"),
+      child: Text(
+        "Delete",
+        style: TextStyle(color: Colors.red),
+      ),
       onPressed: () {
         _delete();
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (BuildContext context) {
-          return IncidentsListPage();
-        }));
+        Navigator.of(context).popUntil(ModalRoute.withName("/home"));
       },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
-      content: Text("Are you sure you like to delete this incident"),
+      title: Text("Are you sure"),
+      content:
+          Text("This cannot be undone and will remove all associated data."),
       actions: [
         cancelButton,
         deleteButton,

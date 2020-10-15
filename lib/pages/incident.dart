@@ -236,7 +236,7 @@ class _IncidentPageState extends State<IncidentPage> {
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Are you sure"),
+      title: Text("Are you sure?"),
       content:
           Text("This cannot be undone and will remove all associated data."),
       actions: [

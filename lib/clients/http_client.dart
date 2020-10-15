@@ -16,6 +16,7 @@ class HTTPClient {
 
     return this._authData;
   }
+  
 
   Future<String> getRequestPageId() async {
     return (await this._getAuthData()).page.id;
@@ -65,6 +66,16 @@ class HTTPClient {
 
     return json;
   }
+    Future requestdelete(String path) async {
+    http.Response response = await http.delete('$_baseURL/$path',
+        headers: await this._getDefaultHeaders());
+
+    var json = this._getResponseJSON(response);
+    this._handleError(response.statusCode, json);
+
+    return json;
+  }
+
 
   Future requestPatch(String path, Map data) async {
     Map headers = await this._getDefaultHeaders();
@@ -78,6 +89,7 @@ class HTTPClient {
     return json;
   }
 
+
   Future requestPost(String path, Map data) async {
     Map headers = await this._getDefaultHeaders();
     headers['content-type'] = 'application/json; charset=UTF-8';
@@ -89,4 +101,5 @@ class HTTPClient {
 
     return json;
   }
+  
 }

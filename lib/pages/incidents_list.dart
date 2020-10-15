@@ -77,6 +77,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       return null;
     }
   }
+  
 
   Future<List<Incident>> _getMaintenances() async {
     try {

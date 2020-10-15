@@ -8,6 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 import 'package:statuscenter/clients/incidents_client.dart';
 import 'package:statuscenter/models/incident_status.dart';
+import 'incidents_list.dart';
+import 'incidents_list.dart';
 
 class IncidentPage extends StatefulWidget {
   final String id;
@@ -52,6 +54,15 @@ class _IncidentPageState extends State<IncidentPage> {
     }
   }
 
+  Future<Incident> _delete() async {
+    try {
+      this.incident = await new IncidentsClient().deleteIncident(this.id);
+    } on RequestException catch (error) {
+      Navigator.pop(context, error);
+      return null;
+    }
+  }
+
   void _select(Choice choice) async {
     String url = this.incident.shortlink;
     if (choice == choices[0]) {
@@ -67,8 +78,7 @@ class _IncidentPageState extends State<IncidentPage> {
 
   bool _showNewUpdateButton() {
     return this.incident.status != IncidentStatusResolved.key &&
-        this.incident.status !=
-            IncidentStatusCompleted.key;
+        this.incident.status != IncidentStatusCompleted.key;
   }
 
   @override
@@ -106,6 +116,11 @@ class _IncidentPageState extends State<IncidentPage> {
                   }).toList();
                 },
               ),
+              IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    showAlertDialog(context);
+                  })
             ],
           ),
           body: _incidentWidget(),
@@ -198,6 +213,42 @@ class _IncidentPageState extends State<IncidentPage> {
                   overflow: TextOverflow.ellipsis))
         ]);
       }).toList(),
+    );
+  }
+
+  Widget showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget deleteButton = FlatButton(
+      child: Text("Delete"),
+      onPressed: () {
+        _delete();
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
+          return IncidentsListPage();
+        }));
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text("Are you sure you like to delete this incident"),
+      actions: [
+        cancelButton,
+        deleteButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

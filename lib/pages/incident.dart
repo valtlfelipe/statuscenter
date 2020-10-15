@@ -54,9 +54,9 @@ class _IncidentPageState extends State<IncidentPage> {
     }
   }
 
-  Future<Incident> _delete() async {
+  Future _delete() async {
     try {
-      this.incident = await new IncidentsClient().deleteIncident(this.id);
+      await new IncidentsClient().deleteIncident(this.id);
     } on RequestException catch (error) {
       Navigator.pop(context, error);
       return null;
@@ -105,6 +105,11 @@ class _IncidentPageState extends State<IncidentPage> {
             title: Text(this.incident.name),
             backgroundColor: this.incident.getColor(),
             actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    showRemoveDialog(context);
+                  }),
               PopupMenuButton<Choice>(
                 onSelected: _select,
                 itemBuilder: (BuildContext context) {
@@ -116,11 +121,6 @@ class _IncidentPageState extends State<IncidentPage> {
                   }).toList();
                 },
               ),
-              IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    showRemoveDialog(context);
-                  })
             ],
           ),
           body: _incidentWidget(),
@@ -216,40 +216,49 @@ class _IncidentPageState extends State<IncidentPage> {
     );
   }
 
-  Widget showRemoveDialog(BuildContext context) {
+  void showRemoveDialog(BuildContext context) async {
     // set up the buttons
-    Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-    Widget deleteButton = FlatButton(
-      child: Text(
-        "Delete",
-        style: TextStyle(color: Colors.red),
-      ),
-      onPressed: () {
-        _delete();
-        Navigator.of(context).popUntil(ModalRoute.withName("/home"));
-      },
-    );
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Are you sure?"),
-      content:
-          Text("This cannot be undone and will remove all associated data."),
-      actions: [
-        cancelButton,
-        deleteButton,
-      ],
-    );
     // show the dialog
-    showDialog(
+    dynamic removed = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        bool _isLoadingRemoval = false;
+        return StatefulBuilder(builder: (context, setState) {
+          Widget cancelButton = FlatButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+          Widget deleteButton = FlatButton(
+            child: Text(
+              "Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: _isLoadingRemoval
+                ? null
+                : () async {
+                    setState(() {
+                      _isLoadingRemoval = true;
+                    });
+                    await _delete();
+                    Navigator.pop(context, true);
+                  },
+          );
+          return AlertDialog(
+            title: Text("Are you sure?"),
+            content: Text(
+                "This cannot be undone and will remove all associated data."),
+            actions: [
+              cancelButton,
+              deleteButton,
+            ],
+          );
+        });
       },
     );
+    if (removed == true) {
+      Navigator.pop(context, 'refresh');
+    }
   }
 }

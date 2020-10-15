@@ -124,14 +124,17 @@ class _IncidentsListWidget extends State<IncidentsListWidget> {
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
               onTap: () async {
-                dynamic error = await Navigator.pushNamed(
+                dynamic result = await Navigator.pushNamed(
                   context,
                   '/incident',
                   arguments: incident.id,
                 );
-                if (error != null) {
+                if (result == 'refresh') {
+                  _refreshKey.currentState.show();
+                  refresh();
+                } else if (result != null) {
                   scaffoldKey.currentState
-                      .showSnackBar(SnackBar(content: Text(error.toString())));
+                      .showSnackBar(SnackBar(content: Text(result.toString())));
                 }
               },
               title: Text(incident.name),

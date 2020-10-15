@@ -78,7 +78,6 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     }
   }
   
-
   Future<List<Incident>> _getMaintenances() async {
     try {
       List<Incident> incidents = await new IncidentsClient().getMaintenaces();

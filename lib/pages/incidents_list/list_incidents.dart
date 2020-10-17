@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:statuscenter/models/incident.dart';
 
 class IncidentsListWidget extends StatefulWidget {
-  final Function onRefresh;
+  final Function(String _offset) onRefresh;
   final GlobalKey<ScaffoldState> scaffoldKey;
   final IncidentsListWidgetController controller;
 
@@ -24,7 +24,10 @@ class IncidentsListWidgetController {
 class _IncidentsListWidget extends State<IncidentsListWidget> {
   Future _future;
   bool _isRefreshing;
-  Function onRefresh;
+  Function(String _offset) onRefresh;
+  int offset = 1;
+  List<Incident> incidents = [];
+  ScrollController _scrollController = ScrollController();
   GlobalKey<ScaffoldState> scaffoldKey;
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -40,15 +43,44 @@ class _IncidentsListWidget extends State<IncidentsListWidget> {
 
   @override
   void initState() {
-    _future = this.onRefresh();
+    _future = this.onRefresh(offset.toString());
     _isRefreshing = false;
     super.initState();
+    _scrollController.addListener(() {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.position.pixels;
+      //double delta = MediaQuery.of(context).size.height * 0.25;
+      if (maxScroll - currentScroll == 0) {
+        offset++;
+        print(offset);
+        // setState(() {
+
+        // });
+        Future<List<Incident>> moreincdents = this.onRefresh(offset.toString());
+        moreincdents.then((value) {
+          incidents.addAll(value);
+          if (value.isEmpty) {
+            print("no more incidents");
+            offset--;
+          }
+        });
+
+        setState(() {});
+
+        print("lasst postion");
+      }
+    });
   }
 
   refresh() {
-    Future newFuture = this.onRefresh();
+    setState(() {
+      offset = 1;
+      incidents = [];
+    });
+    Future newFuture = this.onRefresh('1');
     setState(() {
       _isRefreshing = true;
+
       _future = newFuture;
     });
     return newFuture;
@@ -74,11 +106,14 @@ class _IncidentsListWidget extends State<IncidentsListWidget> {
                 child: CircularProgressIndicator(),
               );
             }
-            List<Incident> incidents = incidentSnap.data;
+            if (offset == 1) {
+              incidents.addAll(incidentSnap.data);
+            }
+
             if (incidents == null || incidents.length == 0) {
               return _emptyList(context);
             }
-            return _buildListView(incidents);
+            return _buildListView(incidents, _scrollController);
           },
         ),
         onRefresh: () {
@@ -105,8 +140,9 @@ class _IncidentsListWidget extends State<IncidentsListWidget> {
     );
   }
 
-  Widget _buildListView(List<Incident> incidents) {
+  Widget _buildListView(List<Incident> incidents, _controller) {
     return ListView.builder(
+      controller: _controller,
       itemCount: incidents.length,
       itemBuilder: (context, index) {
         Incident incident = incidents[index];

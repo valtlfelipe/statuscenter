@@ -5,7 +5,7 @@ import 'package:statuscenter/models/incident_impact.dart';
 import 'package:statuscenter/models/incident_status.dart';
 
 class IncidentsClient extends HTTPClient {
-  Future<List<Incident>> getOpenIncidents() async {
+  Future<List<Incident>> getOpenIncidents(String _offset) async {
     String pageID = await this.getRequestPageId();
     List responseJSON =
         await this.requestGet('/pages/$pageID/incidents/unresolved');
@@ -13,10 +13,10 @@ class IncidentsClient extends HTTPClient {
   }
 
 
-  Future<List<Incident>> getIncidents() async {
+  Future<List<Incident>> getIncidents(String _offset) async {
     String pageID = await this.getRequestPageId();
     List responseJSON =
-        await this.requestGet('/pages/$pageID/incidents');
+        await this.requestGet('/pages/$pageID/incidents?limit=7&page=$_offset');
     return responseJSON.map((p) => new Incident.fromJson(p)).toList();
   }
   Future<Incident> deleteIncident(String id) async {
@@ -26,7 +26,7 @@ class IncidentsClient extends HTTPClient {
     return new Incident.fromJson(responseJSON);
   }
 
-  Future<List<Incident>> getMaintenaces() async {
+  Future<List<Incident>> getMaintenaces(String _offset) async {
     String pageID = await this.getRequestPageId();
     List responseJSON =
         await this.requestGet('/pages/$pageID/incidents/scheduled');

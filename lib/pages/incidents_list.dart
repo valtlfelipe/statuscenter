@@ -56,9 +56,10 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     return this._authData;
   }
 
-  Future<List<Incident>> _getOpenIncidents() async {
+  Future<List<Incident>> _getOpenIncidents(String _offset) async {
     try {
-      List<Incident> incidents = await new IncidentsClient().getOpenIncidents();
+      List<Incident> incidents =
+          await new IncidentsClient().getOpenIncidents(_offset);
       return incidents;
     } on RequestException catch (error) {
       _scaffoldKey.currentState
@@ -67,9 +68,11 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     }
   }
 
-  Future<List<Incident>> _getIncidents() async {
+  Future<List<Incident>> _getIncidents(String _offset) async {
     try {
-      List<Incident> incidents = await new IncidentsClient().getIncidents();
+      List<Incident> incidents =
+          await new IncidentsClient().getIncidents(_offset);
+      print('called');
       return incidents;
     } on RequestException catch (error) {
       _scaffoldKey.currentState
@@ -77,10 +80,12 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       return null;
     }
   }
-  
-  Future<List<Incident>> _getMaintenances() async {
+
+  Future<List<Incident>> _getMaintenances(String _offset) async {
     try {
-      List<Incident> incidents = await new IncidentsClient().getMaintenaces();
+      List<Incident> incidents =
+          await new IncidentsClient().getMaintenaces(_offset);
+      
       return incidents;
     } on RequestException catch (error) {
       _scaffoldKey.currentState

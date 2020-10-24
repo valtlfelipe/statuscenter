@@ -48,16 +48,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 SizedBox(
                   width: 100,
                   height: 100,
-                  child: Image(
-                      image: AssetImage(
-                          'assets/logo.webp')),
+                  child: Image(image: AssetImage('assets/logo.webp')),
                 ),
                 Text('Status Center',
-                    style: Theme.of(context).textTheme.headline,
+                    style: Theme.of(context).textTheme.headline5,
                     textAlign: TextAlign.center),
                 Text(
                   'Version $_version',
-                  style: Theme.of(context).textTheme.body1,
+                  style: Theme.of(context).textTheme.bodyText2,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 10),
@@ -82,8 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
               leading: Icon(Icons.code),
               title: Text('Source code'),
               onTap: () {
-                _launchURL(
-                    'https://github.com/valtlfelipe/statuscenter');
+                _launchURL('https://github.com/valtlfelipe/statuscenter');
               },
             ),
             ListTile(
@@ -115,9 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: Text('Licenses'),
               trailing: Icon(Icons.chevron_right),
               onTap: () {
-                showLicensePage(
-                    context: context,
-                    applicationVersion: _version);
+                showLicensePage(context: context, applicationVersion: _version);
               },
             )
           ],

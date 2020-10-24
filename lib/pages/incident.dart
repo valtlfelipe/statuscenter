@@ -8,8 +8,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 import 'package:statuscenter/clients/incidents_client.dart';
 import 'package:statuscenter/models/incident_status.dart';
-import 'incidents_list.dart';
-import 'incidents_list.dart';
 
 class IncidentPage extends StatefulWidget {
   final String id;
@@ -152,7 +150,7 @@ class _IncidentPageState extends State<IncidentPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('Update History', style: Theme.of(context).textTheme.title),
+          Text('Update History', style: Theme.of(context).textTheme.headline6),
           SizedBox(height: 10),
           Expanded(
             child: _historyWidget(),
@@ -181,8 +179,8 @@ class _IncidentPageState extends State<IncidentPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-                  child:
-                      Text(item.body, style: Theme.of(context).textTheme.body2),
+                  child: Text(item.body,
+                      style: Theme.of(context).textTheme.bodyText1),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),

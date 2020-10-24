@@ -72,18 +72,16 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 width: 100,
                 height: 100,
-                child: Image(
-                    image: AssetImage(
-                        'assets/logo.webp')),
+                child: Image(image: AssetImage('assets/logo.webp')),
               ),
               Text('Welcome to Status Center!',
-                  style: Theme.of(context).textTheme.headline,
+                  style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center),
               SizedBox(height: 5),
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: Theme.of(context).textTheme.body2,
+                  style: Theme.of(context).textTheme.bodyText1,
                   children: [
                     TextSpan(text: 'Here you can manage your '),
                     TextSpan(
@@ -119,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                         Icon(Icons.lock),
                         SizedBox(width: 5),
                         Text('Your key is only stored on this device.',
-                            style: Theme.of(context).textTheme.body2),
+                            style: Theme.of(context).textTheme.bodyText1),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -152,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
   _helpWidget() {
     return RichText(
       text: TextSpan(
-        style: Theme.of(context).textTheme.body1,
+        style: Theme.of(context).textTheme.bodyText2,
         children: [
           TextSpan(
             text: 'Where do I find my API key?',
@@ -178,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               new RichText(
                 text: new TextSpan(
-                  style: Theme.of(context).textTheme.body1,
+                  style: Theme.of(context).textTheme.bodyText2,
                   children: [
                     new TextSpan(text: '1. Log in to your account at '),
                     new TextSpan(

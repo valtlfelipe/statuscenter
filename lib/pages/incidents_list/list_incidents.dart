@@ -97,7 +97,7 @@ class _IncidentsListWidget extends State<IncidentsListWidget> {
               Icon(Icons.sentiment_satisfied, size: 64),
               SizedBox(height: 10),
               Text('Nothing to see here.',
-                  style: Theme.of(context).textTheme.headline),
+                  style: Theme.of(context).textTheme.headline5),
             ],
           ),
         )

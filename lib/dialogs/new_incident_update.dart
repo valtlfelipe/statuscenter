@@ -51,8 +51,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
       });
       _formKey.currentState.save(); // Save our form now.
 
-      await new IncidentsClient()
-          .createNewUpdate(this.incident.id, this._data);
+      await new IncidentsClient().createNewUpdate(this.incident.id, this._data);
 
       Navigator.pop(context, 'refresh');
     }
@@ -69,55 +68,60 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
         child: SingleChildScrollView(
             child: Form(
                 key: this._formKey,
-                child: Column(children: [
-                  DropdownButtonFormField(
-                    decoration: new InputDecoration(labelText: 'Status'),
-                    items: _incidentStatusList.map((IncidentStatus value) {
-                      return new DropdownMenuItem(
-                        value: value.key,
-                        child: new Text(value.name),
-                      );
-                    }).toList(),
-                    isDense: true,
-                    value: _data.status != null
-                        ? _data.status
-                        : this.incident.status,
-                    onChanged: (String value) {
-                      setState(() => _data.status = value);
-                    },
-                  ),
-                  SizedBox(
-                    height: 150,
-                    child: TextFormField(
-                      decoration: new InputDecoration(labelText: 'Message'),
-                      keyboardType: TextInputType.multiline,
-                      minLines: null,
-                      maxLines: null,
-                      expands: true,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onSaved: (String value) {
-                        this._data.body = value;
-                      },
-                    ),
-                  ),
-                  _componentsWidget(),
-                  SizedBox(height: 20),
-                  SizedBox(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        child: new Text(
-                          _isButtonDisabled ? 'Saving...' : 'Update',
-                          style: new TextStyle(color: Colors.white),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Inicident: ${this.incident.name}',
+                          style: Theme.of(context).textTheme.subtitle2),
+                      DropdownButtonFormField(
+                        decoration: new InputDecoration(labelText: 'Status'),
+                        items: _incidentStatusList.map((IncidentStatus value) {
+                          return new DropdownMenuItem(
+                            value: value.key,
+                            child: new Text(value.name),
+                          );
+                        }).toList(),
+                        isDense: true,
+                        value: _data.status != null
+                            ? _data.status
+                            : this.incident.status,
+                        onChanged: (String value) {
+                          setState(() => _data.status = value);
+                        },
+                      ),
+                      SizedBox(
+                        height: 150,
+                        child: TextFormField(
+                          decoration: new InputDecoration(labelText: 'Message'),
+                          keyboardType: TextInputType.multiline,
+                          minLines: null,
+                          maxLines: null,
+                          expands: true,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                          onSaved: (String value) {
+                            this._data.body = value;
+                          },
                         ),
-                        onPressed: this._isButtonDisabled ? null : this.submit,
-                        color: ACCENT_COLOR,
-                      )),
-                ]))),
+                      ),
+                      _componentsWidget(),
+                      SizedBox(height: 20),
+                      SizedBox(
+                          width: double.infinity,
+                          child: RaisedButton(
+                            child: new Text(
+                              _isButtonDisabled ? 'Saving...' : 'Update',
+                              style: new TextStyle(color: Colors.white),
+                            ),
+                            onPressed:
+                                this._isButtonDisabled ? null : this.submit,
+                            color: ACCENT_COLOR,
+                          )),
+                    ]))),
       ),
     );
   }
@@ -128,8 +132,7 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
       children: [
         SizedBox(height: 20),
         Text('Components affected',
-            style: Theme.of(context).textTheme.subtitle),
-        // SizedBox(height: 10),
+            style: Theme.of(context).textTheme.subtitle2),
         _componentsListWidget(),
       ],
     );
@@ -137,6 +140,11 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
 
   _componentsListWidget() {
     List<AffectedComponent> components = this._data.components;
+
+    if (components == null || components.length == 0) {
+      return Text('No components were affected by this update.',
+          style: Theme.of(context).textTheme.caption);
+    }
 
     return Column(
       children: components.map((AffectedComponent c) {

@@ -26,7 +26,7 @@ See the [project](https://github.com/valtlfelipe/statuscenter/projects/1) to kno
 
 ## Screenshots
 <div align="center">
-  <img alt="Screenshot" src=".github/screenshots/main_light.png" height="480">
+  <img alt="Screenshot" src=".github/screenshots/main_dark.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/main.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/incident.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/new_update.png" height="480">

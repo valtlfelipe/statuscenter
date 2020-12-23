@@ -11,7 +11,7 @@ description: An app where you can manage your statuspage.io page with ease and o
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.0+2
+version: 1.2.0+1
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -22,7 +22,7 @@ dependencies:
   shared_preferences: '>=0.5.12+2 <2.0.0'
   http: ^0.12.2
   intl: ^0.16.1
-  url_launcher: ^5.7.5
+  url_launcher: ^5.7.10
   share: '>=0.6.5+3 <2.0.0'
   flutter_datetime_picker: ^1.4.0
   package_info: '>=0.4.3 <2.0.0'

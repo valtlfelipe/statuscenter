@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20),
                     SizedBox(
                         width: double.infinity,
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           child: new Text(
                             _isButtonDisabled
                                 ? 'Getting your data...'
@@ -132,7 +132,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed:
                               this._isButtonDisabled ? null : this.submit,
-                          color: ACCENT_COLOR,
+                          style: ElevatedButton.styleFrom(
+                            primary: ACCENT_COLOR,
+                          ),
                         )),
                     SizedBox(height: 10),
                     _helpWidget(),

@@ -16,7 +16,6 @@ class HTTPClient {
 
     return this._authData;
   }
-  
 
   Future<String> getRequestPageId() async {
     return (await this._getAuthData()).page.id;
@@ -58,16 +57,7 @@ class HTTPClient {
   }
 
   Future requestGet(String path) async {
-    http.Response response = await http.get('$_baseURL/$path',
-        headers: await this._getDefaultHeaders());
-
-    var json = this._getResponseJSON(response);
-    this._handleError(response.statusCode, json);
-
-    return json;
-  }
-    Future requestdelete(String path) async {
-    http.Response response = await http.delete('$_baseURL/$path',
+    http.Response response = await http.get(Uri.parse('$_baseURL/$path'),
         headers: await this._getDefaultHeaders());
 
     var json = this._getResponseJSON(response);
@@ -76,11 +66,20 @@ class HTTPClient {
     return json;
   }
 
+  Future requestdelete(String path) async {
+    http.Response response = await http.delete(Uri.parse('$_baseURL/$path'),
+        headers: await this._getDefaultHeaders());
+
+    var json = this._getResponseJSON(response);
+    this._handleError(response.statusCode, json);
+
+    return json;
+  }
 
   Future requestPatch(String path, Map data) async {
     Map headers = await this._getDefaultHeaders();
     headers['content-type'] = 'application/json; charset=UTF-8';
-    http.Response response = await http.patch('$_baseURL/$path',
+    http.Response response = await http.patch(Uri.parse('$_baseURL/$path'),
         headers: headers, body: jsonEncode(data));
 
     var json = this._getResponseJSON(response);
@@ -88,12 +87,11 @@ class HTTPClient {
 
     return json;
   }
-
 
   Future requestPost(String path, Map data) async {
     Map headers = await this._getDefaultHeaders();
     headers['content-type'] = 'application/json; charset=UTF-8';
-    http.Response response = await http.post('$_baseURL/$path',
+    http.Response response = await http.post(Uri.parse('$_baseURL/$path'),
         headers: headers, body: jsonEncode(data));
 
     var json = this._getResponseJSON(response);
@@ -101,5 +99,4 @@ class HTTPClient {
 
     return json;
   }
-  
 }

@@ -222,13 +222,16 @@ class _IncidentPageState extends State<IncidentPage> {
       builder: (BuildContext context) {
         bool _isLoadingRemoval = false;
         return StatefulBuilder(builder: (context, setState) {
-          Widget cancelButton = FlatButton(
-            child: Text("Cancel"),
+          Widget cancelButton = TextButton(
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.black),
+            ),
             onPressed: () {
               Navigator.pop(context);
             },
           );
-          Widget deleteButton = FlatButton(
+          Widget deleteButton = TextButton(
             child: Text(
               "Delete",
               style: TextStyle(color: Colors.red),

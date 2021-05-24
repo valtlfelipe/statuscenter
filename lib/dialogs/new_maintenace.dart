@@ -24,7 +24,7 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
   void initState() {
     _isButtonDisabled = false;
     this._data.status = IncidentStatusInvestigating.key;
-    this._data.components = new List<Component>();
+    this._data.components = [];
     this._data.scheduledFor = DateTime.now();
     this._data.scheduledUntil =
         this._data.scheduledFor.add(new Duration(days: 1));
@@ -48,8 +48,7 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
       });
       _formKey.currentState.save(); // Save our form now.
 
-      await new IncidentsClient()
-          .createNewMaintenance(this._data);
+      await new IncidentsClient().createNewMaintenance(this._data);
 
       Navigator.pop(context, 'refresh');
     }
@@ -135,13 +134,15 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
                   SizedBox(height: 20),
                   SizedBox(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: ElevatedButton(
                         child: new Text(
                           _isButtonDisabled ? 'Saving...' : 'Create',
                           style: new TextStyle(color: Colors.white),
                         ),
                         onPressed: this._isButtonDisabled ? null : this.submit,
-                        color: ACCENT_COLOR,
+                        style: ElevatedButton.styleFrom(
+                          primary: ACCENT_COLOR,
+                        ),
                       )),
                 ]))),
       ),
@@ -155,8 +156,10 @@ class _NewMaintenaceDialogState extends State<NewMaintenaceDialog> {
         SizedBox(height: 20),
         SizedBox(
             width: double.infinity,
-            child: RaisedButton(
-              color: Colors.blue,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+              ),
               child: new Text(
                 'Select affected components',
                 style: new TextStyle(color: Colors.white),

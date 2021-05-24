@@ -60,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '© 2020 Felipe Valtl de Mello',
+                  '© 2021 Felipe Valtl de Mello',
                   style: Theme.of(context).textTheme.caption,
                   textAlign: TextAlign.center,
                 )
@@ -131,13 +131,16 @@ class _SettingsPageState extends State<SettingsPage> {
             title: Text('Are you sure?'),
             content: Text('You will have to login with an API key again.'),
             actions: [
-              FlatButton(
-                child: Text('Cancel'),
+              TextButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.black),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text('Remove', style: TextStyle(color: Colors.red)),
                 onPressed: _isLoadingRemoval
                     ? null

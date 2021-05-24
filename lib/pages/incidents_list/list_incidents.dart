@@ -3,18 +3,18 @@ import 'package:statuscenter/models/incident.dart';
 
 class IncidentsListWidget extends StatefulWidget {
   final Function onRefresh;
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
   final IncidentsListWidgetController controller;
 
   IncidentsListWidget({
     this.controller,
     this.onRefresh,
-    this.scaffoldKey,
+    this.scaffoldMessengerKey,
   });
 
   @override
   State<StatefulWidget> createState() => new _IncidentsListWidget(
-      this.controller, this.onRefresh, this.scaffoldKey);
+      this.controller, this.onRefresh, this.scaffoldMessengerKey);
 }
 
 class IncidentsListWidgetController {
@@ -25,17 +25,19 @@ class _IncidentsListWidget extends State<IncidentsListWidget> {
   Future _future;
   bool _isRefreshing;
   Function onRefresh;
-  GlobalKey<ScaffoldState> scaffoldKey;
+  GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  _IncidentsListWidget(IncidentsListWidgetController _controller,
-      Function onRefresh, GlobalKey scaffoldKey) {
+  _IncidentsListWidget(
+      IncidentsListWidgetController _controller,
+      Function onRefresh,
+      GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey) {
     _controller.refresh = () {
       _refreshKey.currentState.show();
     };
     this.onRefresh = onRefresh;
-    this.scaffoldKey = scaffoldKey;
+    this.scaffoldMessengerKey = scaffoldMessengerKey;
   }
 
   @override
@@ -133,7 +135,7 @@ class _IncidentsListWidget extends State<IncidentsListWidget> {
                   _refreshKey.currentState.show();
                   refresh();
                 } else if (result != null) {
-                  scaffoldKey.currentState
+                  scaffoldMessengerKey.currentState
                       .showSnackBar(SnackBar(content: Text(result.toString())));
                 }
               },

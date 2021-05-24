@@ -112,14 +112,16 @@ class _NewIncidentUpdateDialogState extends State<NewIncidentUpdateDialog> {
                       SizedBox(height: 20),
                       SizedBox(
                           width: double.infinity,
-                          child: RaisedButton(
+                          child: ElevatedButton(
                             child: new Text(
                               _isButtonDisabled ? 'Saving...' : 'Update',
                               style: new TextStyle(color: Colors.white),
                             ),
                             onPressed:
                                 this._isButtonDisabled ? null : this.submit,
-                            color: ACCENT_COLOR,
+                            style: ElevatedButton.styleFrom(
+                              primary: ACCENT_COLOR,
+                            ),
                           )),
                     ]))),
       ),

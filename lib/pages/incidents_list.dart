@@ -22,7 +22,8 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       new IncidentsListWidgetController();
   IncidentsListWidgetController _maintenancesController =
       new IncidentsListWidgetController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      new GlobalKey<ScaffoldMessengerState>();
 
   TabController _tabController;
   final List<Tab> _tabs = <Tab>[
@@ -61,7 +62,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       List<Incident> incidents = await new IncidentsClient().getOpenIncidents();
       return incidents;
     } on RequestException catch (error) {
-      _scaffoldKey.currentState
+      _scaffoldMessengerKey.currentState
           .showSnackBar(SnackBar(content: Text(error.toString())));
       return null;
     }
@@ -72,18 +73,18 @@ class _IncidentsListPageState extends State<IncidentsListPage>
       List<Incident> incidents = await new IncidentsClient().getIncidents();
       return incidents;
     } on RequestException catch (error) {
-      _scaffoldKey.currentState
+      _scaffoldMessengerKey.currentState
           .showSnackBar(SnackBar(content: Text(error.toString())));
       return null;
     }
   }
-  
+
   Future<List<Incident>> _getMaintenances() async {
     try {
       List<Incident> incidents = await new IncidentsClient().getMaintenaces();
       return incidents;
     } on RequestException catch (error) {
-      _scaffoldKey.currentState
+      _scaffoldMessengerKey.currentState
           .showSnackBar(SnackBar(content: Text(error.toString())));
       return null;
     }
@@ -94,7 +95,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          key: _scaffoldKey,
+          key: _scaffoldMessengerKey,
           appBar: AppBar(
             title: Text('Status Center'),
             bottom: TabBar(
@@ -109,15 +110,15 @@ class _IncidentsListPageState extends State<IncidentsListPage>
               new IncidentsListWidget(
                   controller: _openIncidentsController,
                   onRefresh: _getOpenIncidents,
-                  scaffoldKey: _scaffoldKey),
+                  scaffoldMessengerKey: _scaffoldMessengerKey),
               new IncidentsListWidget(
                   controller: _incidentsController,
                   onRefresh: _getIncidents,
-                  scaffoldKey: _scaffoldKey),
+                  scaffoldMessengerKey: _scaffoldMessengerKey),
               new IncidentsListWidget(
                   controller: _maintenancesController,
                   onRefresh: _getMaintenances,
-                  scaffoldKey: _scaffoldKey),
+                  scaffoldMessengerKey: _scaffoldMessengerKey),
             ],
           ),
           floatingActionButton: FloatingActionButton(

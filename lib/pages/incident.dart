@@ -31,6 +31,7 @@ const List<Choice> choices = const <Choice>[
 
 class _IncidentPageState extends State<IncidentPage> {
   Future<Incident> _future;
+  bool _isRefreshing;
   Incident incident;
   String id;
 
@@ -39,12 +40,14 @@ class _IncidentPageState extends State<IncidentPage> {
   @override
   void initState() {
     _future = _getPage();
+    _isRefreshing = false;
     super.initState();
   }
 
   Future<Incident> _getPage() async {
     try {
       this.incident = await new IncidentsClient().getIncident(this.id);
+      _isRefreshing = false;
       return this.incident;
     } on RequestException catch (error) {
       Navigator.pop(context, error);
@@ -90,7 +93,8 @@ class _IncidentPageState extends State<IncidentPage> {
                 'Something wrong with message: ${incidentSnap.error.toString()}'),
           );
         } else if (incidentSnap.connectionState != ConnectionState.done ||
-            this.incident == null) {
+            this.incident == null ||
+            _isRefreshing) {
           return Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
@@ -133,7 +137,10 @@ class _IncidentPageState extends State<IncidentPage> {
                             },
                             fullscreenDialog: true));
                     if (result == 'refresh') {
-                      _future = _getPage();
+                      setState(() {
+                        _isRefreshing = true;
+                        _future = _getPage();
+                      });
                     }
                   },
                   child: Icon(Icons.add),

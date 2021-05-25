@@ -11,31 +11,21 @@ import 'package:statuscenter/models/incident_status.dart';
 
 class IncidentPage extends StatefulWidget {
   final String id;
-
   IncidentPage({this.id});
 
   @override
-  State<StatefulWidget> createState() => new _IncidentPageState(this.id);
+  _IncidentPageState createState() => new _IncidentPageState();
 }
 
-class Choice {
-  const Choice({this.title});
-
-  final String title;
-}
-
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Open in browser'),
-  const Choice(title: 'Share'),
+const List<String> choices = [
+  'Open in browser',
+  'Share',
 ];
 
 class _IncidentPageState extends State<IncidentPage> {
   Future<Incident> _future;
   bool _isRefreshing;
   Incident incident;
-  String id;
-
-  _IncidentPageState(this.id);
 
   @override
   void initState() {
@@ -46,7 +36,7 @@ class _IncidentPageState extends State<IncidentPage> {
 
   Future<Incident> _getPage() async {
     try {
-      this.incident = await new IncidentsClient().getIncident(this.id);
+      this.incident = await new IncidentsClient().getIncident(widget.id);
       _isRefreshing = false;
       return this.incident;
     } on RequestException catch (error) {
@@ -57,14 +47,14 @@ class _IncidentPageState extends State<IncidentPage> {
 
   Future _delete() async {
     try {
-      await new IncidentsClient().deleteIncident(this.id);
+      await new IncidentsClient().deleteIncident(widget.id);
     } on RequestException catch (error) {
       Navigator.pop(context, error);
       return null;
     }
   }
 
-  void _select(Choice choice) async {
+  void _select(String choice) async {
     String url = this.incident.shortlink;
     if (choice == choices[0]) {
       if (await canLaunch(url)) {
@@ -106,19 +96,20 @@ class _IncidentPageState extends State<IncidentPage> {
           appBar: AppBar(
             title: Text(this.incident.name),
             backgroundColor: this.incident.getColor(),
-            actions: <Widget>[
+            actions: [
               IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    showRemoveDialog(context);
-                  }),
-              PopupMenuButton<Choice>(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  showRemoveDialog(context);
+                },
+              ),
+              PopupMenuButton<String>(
                 onSelected: _select,
                 itemBuilder: (BuildContext context) {
-                  return choices.map((Choice choice) {
-                    return PopupMenuItem<Choice>(
+                  return choices.map((String choice) {
+                    return PopupMenuItem<String>(
                       value: choice,
-                      child: Text(choice.title),
+                      child: Text(choice),
                     );
                   }).toList();
                 },
@@ -131,11 +122,13 @@ class _IncidentPageState extends State<IncidentPage> {
                   onPressed: () async {
                     final result =
                         await Navigator.of(context).push(new MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return new NewIncidentUpdateDialog(
-                                  incident: this.incident);
-                            },
-                            fullscreenDialog: true));
+                      builder: (BuildContext context) {
+                        return new NewIncidentUpdateDialog(
+                          incident: this.incident,
+                        );
+                      },
+                      fullscreenDialog: true,
+                    ));
                     if (result == 'refresh') {
                       setState(() {
                         _isRefreshing = true;
@@ -156,7 +149,7 @@ class _IncidentPageState extends State<IncidentPage> {
       padding: new EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
           Text('Update History', style: Theme.of(context).textTheme.headline6),
           SizedBox(height: 10),
           Expanded(
@@ -179,15 +172,17 @@ class _IncidentPageState extends State<IncidentPage> {
           return Card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+              children: [
                 ListTile(
                   title: Text(item.getStatusFormated()),
                   subtitle: Text(item.getDisplayedAtFormated()),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-                  child: Text(item.body,
-                      style: Theme.of(context).textTheme.bodyText1),
+                  child: Text(
+                    item.body,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
@@ -204,26 +199,31 @@ class _IncidentPageState extends State<IncidentPage> {
     if (components == null ||
         components.length == 0 ||
         (components.length == 1 && components[0].newStatus == null)) {
-      return Text('No components were affected by this update.',
-          style: Theme.of(context).textTheme.caption);
+      return Text(
+        'No components were affected by this update.',
+        style: Theme.of(context).textTheme.caption,
+      );
     }
     return Column(
       children: components.map((AffectedComponent component) {
-        return Row(children: [
-          component.getDisplayIcon(),
-          SizedBox(width: 5),
-          Expanded(
-              child: Text(component.name,
-                  style: Theme.of(context).textTheme.caption,
-                  overflow: TextOverflow.ellipsis))
-        ]);
+        return Row(
+          children: [
+            component.getDisplayIcon(),
+            SizedBox(width: 5),
+            Expanded(
+              child: Text(
+                component.name,
+                style: Theme.of(context).textTheme.caption,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )
+          ],
+        );
       }).toList(),
     );
   }
 
   void showRemoveDialog(BuildContext context) async {
-    // set up the buttons
-    // show the dialog
     dynamic removed = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -231,7 +231,7 @@ class _IncidentPageState extends State<IncidentPage> {
         return StatefulBuilder(builder: (context, setState) {
           Widget cancelButton = TextButton(
             child: Text(
-              "Cancel",
+              'Cancel',
               style: TextStyle(color: Colors.black),
             ),
             onPressed: () {
@@ -240,7 +240,7 @@ class _IncidentPageState extends State<IncidentPage> {
           );
           Widget deleteButton = TextButton(
             child: Text(
-              "Delete",
+              'Delete',
               style: TextStyle(color: Colors.red),
             ),
             onPressed: _isLoadingRemoval
@@ -254,9 +254,9 @@ class _IncidentPageState extends State<IncidentPage> {
                   },
           );
           return AlertDialog(
-            title: Text("Are you sure?"),
+            title: Text('Are you sure?'),
             content: Text(
-                "This cannot be undone and will remove all associated data."),
+                'This cannot be undone and will remove all associated data.'),
             actions: [
               cancelButton,
               deleteButton,

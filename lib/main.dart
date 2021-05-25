@@ -4,7 +4,7 @@ import 'package:statuscenter/pages/incidents_list.dart';
 import 'package:statuscenter/pages/incident.dart';
 import 'package:statuscenter/pages/settings.dart';
 import 'package:statuscenter/services/auth_service.dart';
-import 'package:statuscenter/ui/color.dart';
+import 'package:statuscenter/utils/color.dart';
 
 bool _isAuthenticated = false;
 
@@ -37,7 +37,7 @@ class StatusCenterApp extends StatelessWidget {
               break;
             case '/home':
               return MaterialPageRoute(
-                  settings: RouteSettings(name: "/home"),
+                  settings: RouteSettings(name: '/home'),
                   builder: (context) => IncidentsListPage());
               break;
             case '/incident':

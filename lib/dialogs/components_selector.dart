@@ -5,25 +5,21 @@ import 'package:statuscenter/models/component.dart';
 import 'package:statuscenter/models/component_status.dart';
 import 'package:statuscenter/services/auth_service.dart';
 
-class ComponentsSelector extends StatefulWidget {
+class ComponentsSelectorDialog extends StatefulWidget {
   final List<Component> components;
   final bool allowStatusChange;
 
-  ComponentsSelector({Key key, this.components, this.allowStatusChange})
+  ComponentsSelectorDialog({Key key, this.components, this.allowStatusChange})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      new _ComponentsSelectorState(this.components, this.allowStatusChange);
+  _ComponentsSelectorDialogState createState() =>
+      new _ComponentsSelectorDialogState();
 }
 
-class _ComponentsSelectorState extends State<ComponentsSelector> {
-  List<Component> components;
-  bool allowStatusChange;
+class _ComponentsSelectorDialogState extends State<ComponentsSelectorDialog> {
   Future _componentsBuilder;
   List<AffectedComponentSelector> _data;
-
-  _ComponentsSelectorState(this.components, this.allowStatusChange);
 
   @override
   void initState() {
@@ -37,8 +33,7 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
         await new ComponentsClient(authData.apiKey, authData.page.id).getAll();
     setState(() {
       _data = data.map((c) {
-        Component alreadySelected = this
-            .components
+        Component alreadySelected = widget.components
             .firstWhere((comp) => comp.id == c.id, orElse: () => null);
         if (alreadySelected != null) {
           c.status = alreadySelected.status;
@@ -87,14 +82,14 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: new IconButton(
-            icon: new Icon(Icons.close),
+          leading: IconButton(
+            icon: Icon(Icons.close),
             onPressed: this._onClose,
           ),
           title: Text('Affected components'),
         ),
-        body: new Container(
-          padding: new EdgeInsets.all(10),
+        body: Container(
+          padding: EdgeInsets.all(10),
           child: FutureBuilder(
             future: _componentsBuilder,
             builder: (context, incidentSnap) {
@@ -129,14 +124,14 @@ class _ComponentsSelectorState extends State<ComponentsSelector> {
             controlAffinity: ListTileControlAffinity.leading,
           ),
           Visibility(
-            visible: this.allowStatusChange && c.selected,
+            visible: widget.allowStatusChange && c.selected,
             child: Container(
-              padding: new EdgeInsets.only(left: 25, right: 25),
+              padding: EdgeInsets.only(left: 25, right: 25),
               child: DropdownButtonFormField(
                 items: ComponentStatusList.map((ComponentStatus value) {
                   return new DropdownMenuItem(
                     value: value.key,
-                    child: new Text(value.name),
+                    child: Text(value.name),
                   );
                 }).toList(),
                 isDense: true,

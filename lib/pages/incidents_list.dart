@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:statuscenter/clients/incidents_client.dart';
 import 'package:statuscenter/dialogs/new_incident.dart';
-import 'package:statuscenter/dialogs/new_maintenace.dart';
+import 'package:statuscenter/dialogs/new_maintenance.dart';
 import 'package:statuscenter/exceptions/request_exception.dart';
 import 'package:statuscenter/models/auth_data.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/services/auth_service.dart';
-import 'package:statuscenter/ui/color.dart';
-import 'incidents_list/list_incidents.dart';
+import 'package:statuscenter/utils/color.dart';
+import 'package:statuscenter/components/incidents_list.dart';
 
 class IncidentsListPage extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
   @override
   void initState() {
     _tabController = new TabController(vsync: this, length: _tabs.length);
-    _getAuthData();
+    _loadAuthData();
     super.initState();
   }
 
@@ -46,20 +46,31 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     super.dispose();
   }
 
-  Future<AuthData> _getAuthData() async {
+  Future _loadAuthData() async {
     if (this._authData == null) {
       AuthData authData = await AuthService.getData();
       setState(() {
         _authData = authData;
       });
-      return authData;
     }
-    return this._authData;
   }
 
-  Future<List<Incident>> _getOpenIncidents() async {
+  Future<List<Incident>> _requestIncidents(String type) async {
     try {
-      List<Incident> incidents = await new IncidentsClient().getOpenIncidents();
+      List<Incident> incidents;
+      switch (type) {
+        case 'open':
+          incidents = await new IncidentsClient().getOpenIncidents();
+          break;
+
+        case 'incidents':
+          incidents = await new IncidentsClient().getIncidents();
+          break;
+
+        case 'maintenances':
+          incidents = await new IncidentsClient().getMaintenances();
+          break;
+      }
       return incidents;
     } on RequestException catch (error) {
       _scaffoldMessengerKey.currentState
@@ -68,26 +79,16 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     }
   }
 
-  Future<List<Incident>> _getIncidents() async {
-    try {
-      List<Incident> incidents = await new IncidentsClient().getIncidents();
-      return incidents;
-    } on RequestException catch (error) {
-      _scaffoldMessengerKey.currentState
-          .showSnackBar(SnackBar(content: Text(error.toString())));
-      return null;
-    }
+  Future<List<Incident>> _getOpenIncidents() {
+    return this._requestIncidents('open');
+  }
+
+  Future<List<Incident>> _getIncidents() {
+    return this._requestIncidents('incidents');
   }
 
   Future<List<Incident>> _getMaintenances() async {
-    try {
-      List<Incident> incidents = await new IncidentsClient().getMaintenaces();
-      return incidents;
-    } on RequestException catch (error) {
-      _scaffoldMessengerKey.currentState
-          .showSnackBar(SnackBar(content: Text(error.toString())));
-      return null;
-    }
+    return this._requestIncidents('maintenances');
   }
 
   @override
@@ -95,56 +96,61 @@ class _IncidentsListPageState extends State<IncidentsListPage>
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          key: _scaffoldMessengerKey,
-          appBar: AppBar(
-            title: Text('Status Center'),
-            bottom: TabBar(
-              controller: _tabController,
-              tabs: _tabs,
-            ),
-          ),
-          drawer: _getDrawer(),
-          body: TabBarView(
+        key: _scaffoldMessengerKey,
+        appBar: AppBar(
+          title: Text('Status Center'),
+          bottom: TabBar(
             controller: _tabController,
-            children: [
-              new IncidentsListWidget(
-                  controller: _openIncidentsController,
-                  onRefresh: _getOpenIncidents,
-                  scaffoldMessengerKey: _scaffoldMessengerKey),
-              new IncidentsListWidget(
-                  controller: _incidentsController,
-                  onRefresh: _getIncidents,
-                  scaffoldMessengerKey: _scaffoldMessengerKey),
-              new IncidentsListWidget(
-                  controller: _maintenancesController,
-                  onRefresh: _getMaintenances,
-                  scaffoldMessengerKey: _scaffoldMessengerKey),
-            ],
+            tabs: _tabs,
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final result =
-                  await Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        // Maintenaces tab
-                        if (this._tabController.index == 2) {
-                          return new NewMaintenaceDialog();
-                        }
-                        return new NewIncidentDialog();
-                      },
-                      fullscreenDialog: true));
-              if (result == 'refresh') {
-                if (this._tabController.index == 0) {
-                  _openIncidentsController.refresh();
-                } else if (this._tabController.index == 1) {
-                  _incidentsController.refresh();
-                } else if (this._tabController.index == 2) {
-                  _maintenancesController.refresh();
-                }
-              }
-            },
-            child: Icon(Icons.add),
-          )),
+        ),
+        drawer: _getDrawer(),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            new IncidentsListWidget(
+                controller: _openIncidentsController,
+                onRefresh: _getOpenIncidents,
+                scaffoldMessengerKey: _scaffoldMessengerKey),
+            new IncidentsListWidget(
+                controller: _incidentsController,
+                onRefresh: _getIncidents,
+                scaffoldMessengerKey: _scaffoldMessengerKey),
+            new IncidentsListWidget(
+                controller: _maintenancesController,
+                onRefresh: _getMaintenances,
+                scaffoldMessengerKey: _scaffoldMessengerKey),
+          ],
+        ),
+        floatingActionButton: _getAddButton(),
+      ),
+    );
+  }
+
+  _getAddButton() {
+    return FloatingActionButton(
+      onPressed: () async {
+        final result = await Navigator.of(context).push(new MaterialPageRoute(
+          builder: (BuildContext context) {
+            // Maintenances tab
+            if (this._tabController.index == 2) {
+              return new NewMaintenanceDialog();
+            }
+            return new NewIncidentDialog();
+          },
+          fullscreenDialog: true,
+        ));
+        if (result == 'refresh') {
+          if (this._tabController.index == 0) {
+            _openIncidentsController.refresh();
+          } else if (this._tabController.index == 1) {
+            _incidentsController.refresh();
+          } else if (this._tabController.index == 2) {
+            _maintenancesController.refresh();
+          }
+        }
+      },
+      child: Icon(Icons.add),
     );
   }
 

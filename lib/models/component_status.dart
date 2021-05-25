@@ -24,9 +24,9 @@ const ComponentStatusMajorOutage = ComponentStatus(
     key: 'major_outage',
     name: 'Major outage',
     icon: Icon(Icons.cancel, color: Colors.red, size: 18));
-const ComponentStatusUnderMaintenace = ComponentStatus(
+const ComponentStatusUnderMaintenance = ComponentStatus(
     key: 'under_maintenance',
-    name: 'Under maintenace',
+    name: 'Under maintenance',
     icon: Icon(Icons.build, color: Colors.blue, size: 18));
 
 const List<ComponentStatus> ComponentStatusList = [
@@ -34,5 +34,5 @@ const List<ComponentStatus> ComponentStatusList = [
   ComponentStatusDegradedPerformance,
   ComponentStatusPartialOutage,
   ComponentStatusMajorOutage,
-  ComponentStatusUnderMaintenace,
+  ComponentStatusUnderMaintenance,
 ];

@@ -48,11 +48,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 SizedBox(
                   width: 100,
                   height: 100,
-                  child: Image(image: AssetImage('assets/logo.webp')),
+                  child: Image(
+                    image: AssetImage('assets/logo.webp'),
+                  ),
                 ),
-                Text('Status Center',
-                    style: Theme.of(context).textTheme.headline5,
-                    textAlign: TextAlign.center),
+                Text(
+                  'Status Center',
+                  style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.center,
+                ),
                 Text(
                   'Version $_version',
                   style: Theme.of(context).textTheme.bodyText2,

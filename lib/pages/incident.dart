@@ -234,15 +234,26 @@ class _IncidentPageState extends State<IncidentPage> {
               'Cancel',
               style: TextStyle(color: Colors.black),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: _isLoadingRemoval
+                ? null
+                : () {
+                    Navigator.pop(context);
+                  },
           );
           Widget deleteButton = TextButton(
-            child: Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: _isLoadingRemoval
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.red,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red),
+                  ),
             onPressed: _isLoadingRemoval
                 ? null
                 : () async {

@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:statuscenter/models/api_key_validation_result.dart';
+import 'package:statuscenter/models/page.dart' as PageModel;
 import 'package:statuscenter/services/api_key_validation_service.dart';
 import 'package:statuscenter/services/auth_service.dart';
 import 'package:statuscenter/utils/color.dart';
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String _validateApiKey(String value) {
-    if (value.length < 10) {
+    if (value.length != 36) {
       return 'Invalid API key';
     }
     return null;
@@ -46,8 +47,20 @@ class _LoginPageState extends State<LoginPage> {
           await APIKeyValidationService.validate(_data.apiKey);
 
       if (validation.valid) {
-        await AuthService.login(validation.apiKey, validation.page);
-        Navigator.pushReplacementNamed(context, '/home');
+        PageModel.Page page;
+        if (validation.pages.length == 1) {
+          page = validation.pages[0];
+        } else {
+          page = await _showPagesDialog(validation.pages);
+          if (page == null) {
+            setState(() {
+              _isButtonDisabled = false;
+            });
+            return;
+          }
+        }
+        await AuthService.login(_data.apiKey, page);
+        return Navigator.pushReplacementNamed(context, '/home');
       } else {
         setState(() {
           _isButtonDisabled = false;
@@ -201,6 +214,33 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.pop(context);
                 },
                 child: Text('Close'),
+              ),
+            ],
+          );
+        });
+  }
+
+  _showPagesDialog(List<PageModel.Page> pages) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('Select one page:'),
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: pages
+                      .map((p) => ListTile(
+                            title: Text(p.name),
+                            onTap: () {
+                              Navigator.pop(context, p);
+                            },
+                          ))
+                      .toList(),
+                ),
               ),
             ],
           );

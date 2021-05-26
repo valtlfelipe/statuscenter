@@ -6,15 +6,13 @@ import 'package:statuscenter/models/page.dart';
 class APIKeyValidationService {
   static Future<APIKeyValidationResult> validate(String apiKey) async {
     if (apiKey.length < 10) {
-      return new APIKeyValidationResult(
-          valid: false, error: 'Invalid API key', apiKey: apiKey);
+      return new APIKeyValidationResult(valid: false, error: 'Invalid API key');
     }
 
     try {
       List<Page> pages = await new PagesClient(apiKey).getPages();
       if (pages != null && pages.length >= 1) {
-        return new APIKeyValidationResult(
-            valid: true, apiKey: apiKey, page: pages[0]);
+        return new APIKeyValidationResult(valid: true, pages: pages);
       }
 
       return new APIKeyValidationResult(valid: false, error: 'No pages found');

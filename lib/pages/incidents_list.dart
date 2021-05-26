@@ -94,7 +94,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: _tabs.length,
       child: Scaffold(
         key: _scaffoldMessengerKey,
         appBar: AppBar(
@@ -162,38 +162,39 @@ class _IncidentsListPageState extends State<IncidentsListPage>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DrawerHeader(
-                decoration: BoxDecoration(
-                  color: ACCENT_COLOR,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Status Center',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
+              decoration: BoxDecoration(
+                color: ACCENT_COLOR,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Status Center',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
                     ),
-                    SizedBox(height: 20),
-                    Text(
-                      this._authData != null ? this._authData.page.name : '',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    this._authData != null ? this._authData.page.name : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
                     ),
-                    Text(
-                      this._authData != null
-                          ? 'ID: ${this._authData.page.id}'
-                          : '',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                  ),
+                  Text(
+                    this._authData != null
+                        ? 'ID: ${this._authData.page.id}'
+                        : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
                     ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
             ListTile(
               leading: Icon(Icons.announcement),
               title: Text('Incidents'),

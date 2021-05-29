@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statuscenter/pages/home.dart';
 import 'package:statuscenter/pages/login.dart';
 import 'package:statuscenter/pages/incidents_list.dart';
 import 'package:statuscenter/pages/incident.dart';
@@ -38,7 +39,14 @@ class StatusCenterApp extends StatelessWidget {
             case '/home':
               return MaterialPageRoute(
                   settings: RouteSettings(name: '/home'),
-                  builder: (context) => IncidentsListPage());
+                  builder: (context) => HomePage());
+              break;
+            case '/incidents':
+              int currentTab = settings.arguments;
+              return MaterialPageRoute(
+                  settings: RouteSettings(name: '/incidents'),
+                  builder: (context) =>
+                      IncidentsListPage(currentTab: currentTab));
               break;
             case '/incident':
               String id = settings.arguments;

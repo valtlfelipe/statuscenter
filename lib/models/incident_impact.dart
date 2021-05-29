@@ -9,7 +9,7 @@ class IncidentImpact {
 }
 
 const IncidentImpactMinor =
-    IncidentImpact(key: 'minor', name: 'Minor', color: Colors.orange);
+    IncidentImpact(key: 'minor', name: 'Minor', color: Colors.amber);
 const IncidentImpactMajor =
     IncidentImpact(key: 'major', name: 'Major', color: Colors.deepOrange);
 const IncidentImpactCritical =
@@ -17,7 +17,7 @@ const IncidentImpactCritical =
 const IncidentImpactMaintenance =
     IncidentImpact(key: 'maintenance', name: 'Maintenance', color: Colors.blue);
 const IncidentImpactNone =
-    IncidentImpact(key: 'none', name: 'None', color: Colors.blue);
+    IncidentImpact(key: 'none', name: 'None', color: Colors.green);
 
 const List<IncidentImpact> IncidentImpactList = [
   IncidentImpactMinor,

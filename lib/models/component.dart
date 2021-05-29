@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:statuscenter/models/component_status.dart';
+
 class Component {
   String id;
   String name;
@@ -21,5 +24,11 @@ class Component {
       groupId: json['group_id'],
       group: json['group'],
     );
+  }
+
+  Icon getDisplayIcon() {
+    ComponentStatus status =
+        ComponentStatusList.firstWhere((c) => c.key == this.status);
+    return status.icon;
   }
 }

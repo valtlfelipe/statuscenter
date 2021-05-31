@@ -47,7 +47,7 @@ More about my first app on my blog: https://felipe.im/posts/creating-my-first-mo
 ## Support me
 If you liked this app, please support my work (and help me paying the apple developer license) by buying the app or donating a cup of coffee, or supporting me on a monthly basis to help me reach some goals.
 
-<a href="https://www.buymeacoffee.com/valtlfelipe" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+<a href="https://www.buymeacoffee.com/valtlfelipe" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" height="60" width="217" style="height: 60px !important;width: 217px !important;" ></a>
 
 Thanks in advance ❤️
 

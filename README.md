@@ -13,6 +13,7 @@
 _To support the project, the app has a small price_
 
 ## Features
+- Dashboard with overview of current page status
 - List all incidents (open, resolved and maintenances)
 - Create new updates on open incidents
 - Create new incident
@@ -26,8 +27,10 @@ See the [project](https://github.com/valtlfelipe/statuscenter/projects/1) to kno
 
 ## Screenshots
 <div align="center">
-  <img alt="Screenshot" src=".github/screenshots/main_dark.png" height="480">
-  <img alt="Screenshot" src=".github/screenshots/main.png" height="480">
+  <img alt="Screenshot" src=".github/screenshots/dashboard_dark.png" height="480">
+  <img alt="Screenshot" src=".github/screenshots/dashboard.png" height="480">
+  <img alt="Screenshot" src=".github/screenshots/incidents_dark.png" height="480">
+  <img alt="Screenshot" src=".github/screenshots/incidents.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/incident.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/new_update.png" height="480">
   <img alt="Screenshot" src=".github/screenshots/new_incident.png" height="480">
@@ -42,9 +45,9 @@ Currently the app has a small price to help me pay the apple developer license s
 More about my first app on my blog: https://felipe.im/posts/creating-my-first-mobile-app/.
 
 ## Support me
-If you liked this app, please support my work (and help me paying the apple developer license) by buying the app or donating a cup of coffee.
+If you liked this app, please support my work (and help me paying the apple developer license) by buying the app or donating a cup of coffee, or supporting me on a monthly basis to help me reach some goals.
 
-<a href="https://www.buymeacoffee.com/valtlfelipe" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" width="200"></a>
+<a href="https://www.buymeacoffee.com/valtlfelipe" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 Thanks in advance ❤️
 

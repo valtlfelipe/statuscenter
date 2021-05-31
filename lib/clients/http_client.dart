@@ -5,11 +5,11 @@ import 'package:statuscenter/models/auth_data.dart';
 import 'package:statuscenter/services/auth_service.dart';
 
 class HTTPClient {
-  final String _baseURL = 'https://api.statuspage.io/v1/';
+  String _baseURL = 'https://api.statuspage.io/v1/';
   AuthData _authData;
   String _customAPIKey;
 
-  Future<AuthData> _getAuthData() async {
+  Future<AuthData> getAuthData() async {
     if (this._authData == null) {
       this._authData = await AuthService.getData();
     }
@@ -18,18 +18,22 @@ class HTTPClient {
   }
 
   Future<String> getRequestPageId() async {
-    return (await this._getAuthData()).page.id;
+    return (await this.getAuthData()).page.id;
   }
 
   void setCustomAPIKey(String apiKey) {
     this._customAPIKey = apiKey;
   }
 
+  void setCustomBaseURL(String baseURL) {
+    this._baseURL = baseURL;
+  }
+
   Future<String> getRequestApiKey() async {
     if (this._customAPIKey != null) {
       return this._customAPIKey;
     }
-    return (await this._getAuthData()).apiKey;
+    return (await this.getAuthData()).apiKey;
   }
 
   Future<Map<String, String>> _getDefaultHeaders() async {

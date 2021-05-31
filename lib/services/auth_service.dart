@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:statuscenter/clients/pages_client.dart';
 import 'package:statuscenter/models/auth_data.dart';
 import 'package:statuscenter/models/page.dart';
 
@@ -31,5 +32,12 @@ class AuthService {
     Page page = new Page.fromJson(
         json.decode(prefs.getString(AuthService.PAGEDATA_KEY)));
     return new AuthData(apiKey: apiKey, page: page);
+  }
+
+  static getUpdatedData() async {
+    AuthData data = await AuthService.getData();
+    data.page = await new PagesClient(data.apiKey).getPage(data.page.id);
+    await AuthService.login(data.apiKey, data.page);
+    return data;
   }
 }

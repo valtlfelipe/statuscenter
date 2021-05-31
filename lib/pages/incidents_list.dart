@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:statuscenter/clients/incidents_client.dart';
+import 'package:statuscenter/components/sidebar_menu.dart';
 import 'package:statuscenter/dialogs/new_incident.dart';
 import 'package:statuscenter/dialogs/new_maintenance.dart';
 import 'package:statuscenter/exceptions/request_exception.dart';
 import 'package:statuscenter/models/auth_data.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/services/auth_service.dart';
-import 'package:statuscenter/utils/color.dart';
 import 'package:statuscenter/components/incidents_list.dart';
 
 class IncidentsListPage extends StatefulWidget {
+  final int currentTab;
+  IncidentsListPage({this.currentTab = 0});
+
   @override
   State<StatefulWidget> createState() => new _IncidentsListPageState();
 }
@@ -36,6 +39,9 @@ class _IncidentsListPageState extends State<IncidentsListPage>
   @override
   void initState() {
     _tabController = new TabController(vsync: this, length: _tabs.length);
+    if (widget.currentTab != null && widget.currentTab != 0) {
+      _tabController.animateTo(widget.currentTab);
+    }
     _loadAuthData();
     super.initState();
   }
@@ -104,7 +110,10 @@ class _IncidentsListPageState extends State<IncidentsListPage>
             tabs: _tabs,
           ),
         ),
-        drawer: _getDrawer(),
+        drawer: new SidebarMenu(
+          authData: this._authData,
+          currentPage: '/incidents',
+        ),
         body: TabBarView(
           controller: _tabController,
           children: [
@@ -151,68 +160,6 @@ class _IncidentsListPageState extends State<IncidentsListPage>
         }
       },
       child: Icon(Icons.add),
-    );
-  }
-
-  _getDrawer() {
-    return Drawer(
-      child: Container(
-        padding: EdgeInsets.zero,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: ACCENT_COLOR,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Status Center',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    this._authData != null ? this._authData.page.name : '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  Text(
-                    this._authData != null
-                        ? 'ID: ${this._authData.page.id}'
-                        : '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.announcement),
-              title: Text('Incidents'),
-              selected: true,
-              onTap: () => Navigator.pop(context),
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -38,21 +38,30 @@ class SidebarMenu extends StatelessWidget {
                       fontSize: 24,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    this.authData != null ? this.authData.page.name : '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          this.authData != null ? this.authData.page.name : '',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          this.authData != null
+                              ? 'ID: ${this.authData.page.id}'
+                              : '',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    this.authData != null ? 'ID: ${this.authData.page.id}' : '',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
+                  )
                 ],
               ),
             ),

@@ -5,7 +5,7 @@ import 'package:statuscenter/models/affected_component.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/models/incident_history.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:statuscenter/clients/incidents_client.dart';
 import 'package:statuscenter/models/incident_status.dart';
 

@@ -8,6 +8,7 @@ import 'package:statuscenter/models/auth_data.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/services/auth_service.dart';
 import 'package:statuscenter/components/incidents_list.dart';
+import 'package:statuscenter/utils/color.dart';
 
 class IncidentsListPage extends StatefulWidget {
   final int currentTab;
@@ -108,6 +109,7 @@ class _IncidentsListPageState extends State<IncidentsListPage>
           bottom: TabBar(
             controller: _tabController,
             tabs: _tabs,
+            indicatorColor: ACCENT_COLOR,
           ),
         ),
         drawer: new SidebarMenu(
@@ -159,7 +161,10 @@ class _IncidentsListPageState extends State<IncidentsListPage>
           }
         }
       },
-      child: Icon(Icons.add),
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
     );
   }
 }

@@ -19,17 +19,28 @@ class StatusCenterApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final ThemeData lightTheme = ThemeData(
+      brightness: Brightness.light,
+      primarySwatch: APP_COLOR,
+    );
+    final ThemeData darkTheme = ThemeData(
+      brightness: Brightness.dark,
+    );
     return MaterialApp(
         title: 'Status Center',
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: APP_COLOR,
-          accentColor: ACCENT_COLOR,
+        theme: lightTheme.copyWith(
+          colorScheme: lightTheme.colorScheme.copyWith(
+            secondary: ACCENT_COLOR,
+            primary: APP_COLOR,
+          ),
         ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          accentColor: ACCENT_COLOR,
+        darkTheme: darkTheme.copyWith(
+          colorScheme: darkTheme.colorScheme.copyWith(
+            secondary: ACCENT_COLOR,
+            primary: APP_COLOR,
+          ),
         ),
+        // themeMode: ThemeMode.dark,
         initialRoute: _isAuthenticated ? '/home' : '/login',
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {

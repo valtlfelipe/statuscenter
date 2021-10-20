@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:statuscenter/dialogs/select_page_dialog.dart';
+import 'package:statuscenter/dialogs/select_page.dart';
 import 'package:statuscenter/models/auth_data.dart';
 import 'package:statuscenter/services/auth_service.dart';
 import 'package:statuscenter/utils/color.dart';

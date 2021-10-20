@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:statuscenter/dialogs/select_page_dialog.dart';
+import 'package:statuscenter/dialogs/select_page.dart';
 import 'package:statuscenter/models/api_key_validation_result.dart';
 import 'package:statuscenter/models/page.dart' as PageModel;
 import 'package:statuscenter/services/api_key_validation_service.dart';

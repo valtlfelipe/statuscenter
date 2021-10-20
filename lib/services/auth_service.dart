@@ -23,7 +23,7 @@ class AuthService {
   static Future login(String apiKey, Page page) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(AuthService.APIKEY_KEY, apiKey);
-    await prefs.setString(AuthService.PAGEDATA_KEY, jsonEncode(page.toJson()));
+    await AuthService.setPage(page);
   }
 
   static Future<AuthData> getData() async {
@@ -39,5 +39,10 @@ class AuthService {
     data.page = await new PagesClient(data.apiKey).getPage(data.page.id);
     await AuthService.login(data.apiKey, data.page);
     return data;
+  }
+
+  static Future setPage(Page page) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AuthService.PAGEDATA_KEY, jsonEncode(page.toJson()));
   }
 }

@@ -4,7 +4,7 @@ import 'package:statuscenter/models/page.dart';
 class PagesClient extends HTTPClient {
   String apiKey;
 
-  PagesClient(this.apiKey);
+  PagesClient([this.apiKey]);
 
   Future<List<Page>> getPages() async {
     this.setCustomAPIKey(apiKey);

@@ -57,23 +57,20 @@ class _SelectPageDialogState extends State<SelectPageDialog> {
                   Container(
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      'Select your page:',
+                      'Your pages:',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                   ),
                   ..._pages.map((PageModel.Page page) {
                     return InkWell(
-                      onTap: () {
-                        _handleRadioValueChange(page);
-                      },
+                      onTap: () => _handleRadioValueChange(page),
                       child: Container(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: Row(
                           children: [
                             Radio(
-                              onChanged: (dynamic value) {
-                                _handleRadioValueChange(value);
-                              },
+                              onChanged: (value) =>
+                                  _handleRadioValueChange(value),
                               groupValue: widget.currentPage != null ??
                                   widget.currentPage.id,
                               value: page.id,

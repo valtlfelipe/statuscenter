@@ -136,7 +136,10 @@ class _IncidentPageState extends State<IncidentPage> {
                       });
                     }
                   },
-                  child: Icon(Icons.add),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
                 )
               : null,
         );

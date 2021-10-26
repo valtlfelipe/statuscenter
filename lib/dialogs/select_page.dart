@@ -71,8 +71,9 @@ class _SelectPageDialogState extends State<SelectPageDialog> {
                             Radio(
                               onChanged: (value) =>
                                   _handleRadioValueChange(value),
-                              groupValue: widget.currentPage != null ??
-                                  widget.currentPage.id,
+                              groupValue: widget.currentPage != null
+                                  ? widget.currentPage.id
+                                  : null,
                               value: page.id,
                             ),
                             Text(page.name),

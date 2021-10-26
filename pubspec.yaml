@@ -32,14 +32,15 @@ dependencies:
   #cupertino_icons: ^0.1.2
 
 dev_dependencies:
-  flutter_native_splash: ^0.1.9
+  flutter_native_splash: ^1.3.0
   flutter_test:
     sdk: flutter
 
 flutter_native_splash:
-  image: assets/logo.webp
-  color: "626666"
-  android_disable_fullscreen: true
+  image: assets/logo.png
+  color: "#626666"
+  fullscreen: false
+  
 
 
 # For information on the generic Dart part of this file, see the

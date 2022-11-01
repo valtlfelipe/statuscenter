@@ -6,7 +6,7 @@ import 'package:statuscenter/models/page.dart' as PageModel;
 import 'package:statuscenter/services/api_key_validation_service.dart';
 import 'package:statuscenter/services/auth_service.dart';
 import 'package:statuscenter/utils/color.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed:
                               this._isButtonDisabled ? null : this.submit,
                           style: ElevatedButton.styleFrom(
-                            primary: ACCENT_COLOR,
+                            backgroundColor: ACCENT_COLOR,
                           ),
                         )),
                     SizedBox(height: 10),
@@ -199,7 +199,8 @@ class _LoginPageState extends State<LoginPage> {
                       style: new TextStyle(color: Colors.blue),
                       recognizer: new TapGestureRecognizer()
                         ..onTap = () {
-                          launch(statusPageURL);
+                          launchUrlString(statusPageURL,
+                              mode: LaunchMode.externalApplication);
                         },
                     ),
                   ],

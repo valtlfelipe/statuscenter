@@ -20,7 +20,7 @@ class SelectComponents extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.blue,
+              backgroundColor: Colors.blue,
             ),
             child: new Text(
               'Select affected components',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:statuscenter/services/auth_service.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -25,8 +25,8 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
@@ -64,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '© 2021 Felipe Valtl de Mello',
+                  '© 2022 Felipe Valtl de Mello',
                   style: Theme.of(context).textTheme.caption,
                   textAlign: TextAlign.center,
                 )

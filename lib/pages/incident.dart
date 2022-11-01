@@ -4,10 +4,10 @@ import 'package:statuscenter/exceptions/request_exception.dart';
 import 'package:statuscenter/models/affected_component.dart';
 import 'package:statuscenter/models/incident.dart';
 import 'package:statuscenter/models/incident_history.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:statuscenter/clients/incidents_client.dart';
 import 'package:statuscenter/models/incident_status.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class IncidentPage extends StatefulWidget {
   final String id;
@@ -57,8 +57,8 @@ class _IncidentPageState extends State<IncidentPage> {
   void _select(String choice) async {
     String url = this.incident.shortlink;
     if (choice == choices[0]) {
-      if (await canLaunch(url)) {
-        await launch(url);
+      if (await canLaunchUrlString(url)) {
+        await launchUrlString(url, mode: LaunchMode.externalApplication);
       } else {
         throw 'Could not launch $url';
       }

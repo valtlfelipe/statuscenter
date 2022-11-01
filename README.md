@@ -16,9 +16,10 @@ _To support the project, the app has a small price_
 - Dashboard with overview of current page status
 - List all incidents (open, resolved and maintenances)
 - Create new updates on open incidents
-- Create new incident
-- Schedule new maintenance
-- Automatic dark mode
+- Create new incidents
+- Schedule new maintenances
+- Switch between pages on same account
+- Dark mode
 - No tracking or ads
 
 More to come...

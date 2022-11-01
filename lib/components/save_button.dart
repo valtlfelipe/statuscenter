@@ -20,7 +20,7 @@ class SaveButton extends StatelessWidget {
         ),
         onPressed: this.isSaving ? null : this.onPressed,
         style: ElevatedButton.styleFrom(
-          primary: ACCENT_COLOR,
+          backgroundColor: ACCENT_COLOR,
         ),
       ),
     );
